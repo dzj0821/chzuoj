@@ -1,0 +1,117 @@
+<!-- Static navbar -->
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<!--
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			-->
+			<a class="navbar-brand" th:href="@{${config.home}}">
+				<i class="icon-home"></i>
+				[(${config.name})]
+			</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li th:if="${config.onSiteContestId == null}"
+					th:class="${currentUrl == 'Faqs'} ? active">
+					<a th:href="@{/Faqs}">
+						<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+						[(#{faq})]
+					</a>
+				</li>
+
+				<li th:if="${config.onSiteContestId == null}"
+					th:class="${currentUrl == 'ProblemSet'} ? active">
+					<a th:href="@{/ProblemSet}">
+						<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+						[(#{problem})]
+					</a>
+				</li>
+
+				<li th:if="${config.onSiteContestId == null}"
+					th:class="${currentUrl == 'Category'} ? active">
+					<a th:href="@{/Category}">
+						<span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+						[(#{category})]
+					</a>
+				</li>
+				<li th:if="${config.onSiteContestId == null}"
+					th:class="${currentUrl == 'Status'} ? active">
+					<a th:href="@{/Status}">
+						<span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
+						[(#{status})]
+					</a>
+				</li>
+				<li th:if="${config.onSiteContestId == null}"
+					th:class="${currentUrl == 'Ranklist'} ? active">
+					<a th:href="@{/Ranklist}">
+						<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+						[(#{ranklist})]
+					</a>
+				</li>
+				<li th:class="${currentUrl == 'Contest'} ? active">
+					<a
+						th:href="${config.onSiteContestId == null} ? @{/Contest} : @{'/Contest?cid=' + ${config.onSiteContestId}}">
+						<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+						[(#{contest})]
+					</a>
+				</li>
+				<li th:if="${cid != null}">
+					<a>[</a>
+				</li>
+				<li th:if="${cid != null}" class="active">
+					<a th:href="@{'/Contest?cid=' + ${cid}}" th:text="#{problem}"></a>
+				</li>
+				<li th:if="${cid != null}" class="active">
+					<a th:href="@{'/Status?cid=' + ${cid}}" th:text="#{status}"></a>
+				</li>
+				<li th:if="${cid != null}" class="active">
+					<a th:href="@{'/ContestRank?cid=' + ${cid}}" th:text="#{ranklist}"></a>
+				</li>
+				<li th:if="${cid != null}" class="active">
+					<a th:href="@{'/OIContestRank?cid=' + ${cid}}"
+						th:text="'OI' + #{ranklist}"></a>
+				</li>
+				<li th:if="${cid != null}" class="active">
+					<a th:href="@{'/ContestStatistics?cid=' + ${cid}}"
+						th:text="#{statistics}"></a>
+				</li>
+				<li th:if="${cid != null}">
+					<a>]</a>
+				</li>
+				<li th:if="${config.onSiteContestId == null}"
+					th:class="${currentUrl == 'ClassList'} ? active">
+					<a th:href="@{/ClassList}">
+						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+						[(#{class-list})]
+					</a>
+				</li>
+				<li th:if="${config.onSiteContestId == null}"
+					th:class="${currentUrl == 'Statistics'} ? active">
+					<a th:href="@{/Statistics}">
+						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+						[(#{statistics})]
+					</a>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<span id="profile">Login</span>
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<script th:src="@{'/Profile?' + ${#strings.randomAlphanumeric(10)}}" ></script>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>

@@ -1,0 +1,37 @@
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script th:src="${config.cdnUrl} + @{/js/jquery.min.js}"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script th:src="${config.cdnUrl} + @{/js/bootstrap.min.js}"></script>
+<!--  to enable mathjax in hustoj:
+svn export http://github.com/mathjax/MathJax/trunk /home/judge/src/web/mathjax
+<script type="text/javascript"
+  src="mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+or
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+-->
+<script>
+$(document).ready(function(){
+  var msg="<marquee style='margin-top:10px' id=broadcast direction='left' scrollamount=3 scrolldelay=50 onMouseOver='this.stop()'"+
+      " onMouseOut='this.start()' class=toprow>[(${marqueeMessage})]</marquee>";
+  $(".jumbotron").prepend(msg);
+  $("form").append("<div id='csrf' />");
+  $("#csrf").load("[(@{CSRF})]");
+  $("body").append("<div id=footer class=center >CHZUOJ "+(new Date()).getFullYear()+" </div>");
+  $("body").append("<div class=center >版权所有 © 滁州学院 邮编：239000</div>");
+});
+
+$(".hint pre").each(function(){
+	var plus="<span class='glyphicon glyphicon-plus'>Click</span>";
+	var content=$(this);
+	$(this).before(plus);
+	$(this).prev().click(function(){
+		content.toggle();
+	});
+	
+});
+//console.log("To enable mathjax in hustoj, check line 15 in /home/judge/src/web/template/bs3/js.php");
+</script>
+
