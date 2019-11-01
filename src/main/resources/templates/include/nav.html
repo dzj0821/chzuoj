@@ -2,16 +2,6 @@
 <nav class="navbar navbar-default" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<!--
-			<button type="button" class="navbar-toggle collapsed"
-				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-				aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			-->
 			<a class="navbar-brand" th:href="@{${config.home}}">
 				<i class="icon-home"></i>
 				[(${config.name})]
@@ -67,20 +57,20 @@
 					<a>[</a>
 				</li>
 				<li th:if="${cid != null}" class="active">
-					<a th:href="@{'/Contest?cid=' + ${cid}}" th:text="#{problem}"></a>
+					<a th:href="@{/Contest(cid=${cid})}" th:text="#{problem}"></a>
 				</li>
 				<li th:if="${cid != null}" class="active">
-					<a th:href="@{'/Status?cid=' + ${cid}}" th:text="#{status}"></a>
+					<a th:href="@{/Status(cid=${cid})}" th:text="#{status}"></a>
 				</li>
 				<li th:if="${cid != null}" class="active">
-					<a th:href="@{'/ContestRank?cid=' + ${cid}}" th:text="#{ranklist}"></a>
+					<a th:href="@{/ContestRank(cid=${cid})}" th:text="#{ranklist}"></a>
 				</li>
 				<li th:if="${cid != null}" class="active">
-					<a th:href="@{'/OIContestRank?cid=' + ${cid}}"
+					<a th:href="@{/OIContestRank(cid=${cid})}"
 						th:text="'OI' + #{ranklist}"></a>
 				</li>
 				<li th:if="${cid != null}" class="active">
-					<a th:href="@{'/ContestStatistics?cid=' + ${cid}}"
+					<a th:href="@{/ContestStatistics(cid=${cid})}"
 						th:text="#{statistics}"></a>
 				</li>
 				<li th:if="${cid != null}">
@@ -104,11 +94,111 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<span id="profile">Login</span>
+						<span id="profile"></span>
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" role="menu">
-						<script th:src="@{'/Profile?' + ${#strings.randomAlphanumeric(10)}}" ></script>
+						<!-- 已登录情况下的列表  -->
+						<li class="need-login">
+							<a th:href="@{/Modify}" th:text="#{modify-info}"></a>
+						</li>
+
+						<li class="need-login">
+							&nbsp;
+							<a class="need-uid" th:href="@{/UserInfo?uid=}">
+								<span id="red" th:text="#{user-info}"></span>
+							</a>
+						</li>
+						<li class="need-login">
+							&nbsp;
+							<a class="need-uid" th:href="@{/Status?uid=}">
+								<span id="red" th:text="#{my-submissions}"></span>
+							</a>
+						</li>
+						<li class="need-login">
+							&nbsp;
+							<a th:href="@{/Contest?my}">
+								<span id="red" th:text="#{my-contest}"></span>
+							</a>
+						</li>
+						<li class="need-login">
+							&nbsp;
+							<a th:href="@{/ClassList?my}">
+								<span id="red" th:text="#{my-class}"></span>
+							</a>
+						</li>
+						<li class="need-login need-share-code">
+							&nbsp;
+							<a th:href='@{/ShareCodeList}'>
+								<span id="red" th:text="#{share-code}"></span>
+							</a>
+						</li>
+						<li class="need-login">
+							&nbsp;
+							<a th:href="@{/Logout}">
+								<span id="red" th:text="#{logout}"></span>
+							</a>
+						</li>
+						<!-- 未登录情况的列表 -->
+						<li class="not-login">
+							<a th:href="@{/Login}">
+								<span id="red" th:text="#{login}"></span>
+							</a>
+						</li>
+						<li class="not-login need-register">
+							&nbsp;
+							<a th:href="@{/Register}">
+								<span id="red" th:text="#{register}"></span>
+							</a>
+						</li>
+						<li class="need-login need-permission">
+							&nbsp;
+							<a th:href="@{/Admin/}">
+								<span id="red" th:text="#{admin}"></span>
+							</a>
+						</li>
+						<li>
+							&nbsp;
+							<script>
+							var xmlHttp;
+							if (window.XMLHttpRequest) {
+								// code for IE7+, Firefox, Chrome, Opera, Safari
+							    xmlHttp = new XMLHttpRequest();
+							} else {
+								// code for IE6, IE5
+							    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+							}
+							xmlHttp.onreadystatechange = function() {
+							    if (xmlHttp.readyState == 4) {
+							    	var arr;
+							    	if (xmlHttp.status == 200) {
+							    		//200代表已登录
+							    		var json = JSON.parse(xmlHttp.responseText);
+								        arr = document.getElementsByClassName("not-login");
+							        	document.getElementById("profile").innerHTML = json.uid;
+							        	if (!json.shareCode) {
+							        		document.getElementsByClassName("need-share-code")[0].remove();
+							        	}
+							        	if (!json.permission) {
+							        		document.getElementsByClassName("need-permission")[0].remove();
+							        	}
+							        	var needUid = document.getElementsByClassName("need-uid");
+							        	for (var i = 0; i < needUid.length; i++) {
+							        		needUid[i].href += json.uid;
+							        	}
+							    	} else {
+							    		arr = document.getElementsByClassName("need-login");
+							        	document.getElementById("profile").innerHTML = "[(#{login})]";
+							    	}
+							    	while (arr.length != 0) {
+							        	arr[0].remove();
+							        }
+							    }
+							}
+							xmlHttp.open("GET", "/api/Profile?" + Math.random(), true);
+							xmlHttp.send();
+							</script>
+						</li>
 					</ul>
 				</li>
 			</ul>

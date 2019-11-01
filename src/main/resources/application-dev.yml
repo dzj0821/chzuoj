@@ -27,10 +27,20 @@ chzuoj:
     language-mask: 262132
     #启用现场赛状态，填写现场赛比赛ID，不填写代表不启用
     on-site-contest-id: 
+    #启用考试状态，填写考试比赛ID
+    exam-contest-id: 
     #cdn加速的域名
     cdn-url: 
     #网站使用的css文件名
     css: hznu.css
+    #是否必须登录才能访问网站
+    need-login: false
+    #是否开放注册
+    open-register: true
+    #是否允许用户分享代码
+    share-code: false
+    #是否开启验证码
+    vcode: true
 server:
     port: 8080
     servlet:

@@ -16,17 +16,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.edu.chzu.chzuoj.component.BaseComponent;
+import cn.edu.chzu.chzuoj.component.NeedLoginCheckComponent;
 import cn.edu.chzu.chzuoj.component.OnSiteContentCheckComponent;
 import cn.edu.chzu.chzuoj.component.UseConfigComponent;
-import cn.edu.chzu.chzuoj.component.UseCurrentUrlComponent;
+import cn.edu.chzu.chzuoj.component.UrlComponent;
 import cn.edu.chzu.chzuoj.component.UseMarqueeMessageComponent;
-import cn.edu.chzu.chzuoj.config.Config;
-import cn.edu.chzu.chzuoj.dao.MessageDao;
 import cn.edu.chzu.chzuoj.dao.NewDao;
 import cn.edu.chzu.chzuoj.dao.SolutionDao;
 import cn.edu.chzu.chzuoj.listener.EventType;
 import cn.edu.chzu.chzuoj.pojo.ChartData;
 import cn.edu.chzu.chzuoj.pojo.New;
+import cn.edu.chzu.chzuoj.util.SessionAttrNameUtil;
 
 /**
  * 主页
@@ -36,13 +36,13 @@ import cn.edu.chzu.chzuoj.pojo.New;
 @Controller
 public class IndexController extends BaseController {
 	@Autowired
-	private Config config;
-	@Autowired
-	private UseConfigComponent useConfigComponent;
+	private NeedLoginCheckComponent needLoginCheckComponent;
 	@Autowired
 	private OnSiteContentCheckComponent onSiteContentCehckComponent;
 	@Autowired
-	private UseCurrentUrlComponent useCurrentUrlComponent;
+	private UseConfigComponent useConfigComponent;
+	@Autowired
+	private UrlComponent urlComponent;
 	@Autowired
 	private UseMarqueeMessageComponent useMarqueeMessageComponent;
 	@Autowired
@@ -53,16 +53,17 @@ public class IndexController extends BaseController {
 	@RequestMapping("/")
 	public ModelAndView index(@RequestParam Map<String, String> map) {
 		return control(new BaseComponent[] { 
-				useConfigComponent,
+				needLoginCheckComponent,
 				onSiteContentCehckComponent,
-				useCurrentUrlComponent,
+				useConfigComponent,
+				urlComponent,
 				useMarqueeMessageComponent,
-				(HttpServletRequest request, HttpServletResponse response, Map<String, String> params, ModelAndView modelAndView, EventType type)->{
+				(HttpServletRequest request, HttpServletResponse response, Map<String, String> params, ModelAndView modelAndView, EventType type) -> {
 					List<New> news = newDao.selectUsedNews();
 					modelAndView.addObject("news", news);
 					//获得图表数据
 					List<ChartData> allChartDatas = solutionDao.selectAllChartData();
-					String all[][] = new String[allChartDatas.size()][2];
+					String[][] all = new String[allChartDatas.size()][2];
 					for (int i = 0; i < allChartDatas.size(); i++) {
 						all[i][0] = allChartDatas.get(i).getTimestamp();
 						all[i][1] = allChartDatas.get(i).getCount();
@@ -77,7 +78,7 @@ public class IndexController extends BaseController {
 					}
 					modelAndView.addObject("all", json);
 					List<ChartData> acceptedChartDatas = solutionDao.selectAcceptedChartData();
-					String ac[][] = new String[acceptedChartDatas.size()][2];
+					String[][] ac = new String[acceptedChartDatas.size()][2];
 					for (int i = 0; i < acceptedChartDatas.size(); i++) {
 						ac[i][0] = acceptedChartDatas.get(i).getTimestamp();
 						ac[i][1] = acceptedChartDatas.get(i).getCount();
@@ -97,7 +98,7 @@ public class IndexController extends BaseController {
 					}
 					String speedUnit = "day";
 					//如果是管理员，查询更精细的数据
-					if (request.getSession().getAttribute(config.getName() + "_administrator") != null) {
+					if (request.getSession().getAttribute(SessionAttrNameUtil.getAdministrator()) != null) {
 						Integer speedPerMin = solutionDao.selectSubmitSpeedPerMin();
 						if (speedPerMin == null) {
 							speed = "0";
@@ -108,10 +109,9 @@ public class IndexController extends BaseController {
 					}
 					modelAndView.addObject("speed", speed);
 					modelAndView.addObject("speedUnit", speedUnit);
-					//获取滚动条公告
 					modelAndView.setViewName("index");
 					return true;
 				}
-		}, map, EventType.TEST);
+		}, map, null);
 	}
 }

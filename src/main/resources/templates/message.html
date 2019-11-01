@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+<title th:text="#{message}"></title>
+<!-- 
+boolean alert: 是否执行JS取代页面显示
+String message: 为null时一般配合alert使用，直接让页面跳转
+String url: alert=true时为跳转的地址，否则为链接地址
+int back: alert=true时代表页面回退，值为回退的页面数
+ -->
+<script th:if="${alert != null and alert}">
+		[(${message != null} ? 'alert("' + #{${message}} + '");')]
+		[(${url != null} ? 'window.location.href =' + @{${url}} + ';' )]
+		[(${back != null} ? 'history.go(-' + ${back} + ');')]
+	</script>
+<link th:if="${alert == null}" th:replace="include/css">
+</head>
+<body th:if="${alert == null}">
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<div class="jumbotron">
+			<h3 th:if="${url == null}" th:text="#{${message}}"></h3>
+			<a th:if="${url != null}" th:href="@{${url}}" th:text="#{${message}}"></a>
+		</div>
+	</div>
+	<script th:replace="include/js"></script>
+</body>
+</html>

@@ -11,16 +11,17 @@ import org.springframework.web.servlet.ModelAndView;
 import cn.edu.chzu.chzuoj.listener.EventType;
 
 /**
- * 所有包含include/nav.html的页面需要引入此组件
+ * url相关组件
  * @author dzj0821
  *
  */
 @Component
-public class UseCurrentUrlComponent implements BaseComponent {
+public class UrlComponent implements BaseComponent {
 
 	@Override
 	public boolean process(HttpServletRequest request, HttpServletResponse response, Map<String, String> params,
 			ModelAndView modelAndView, EventType type) {
+		//当前url
 		modelAndView.addObject("currentUrl", request.getRequestURI());
 		return true;
 	}

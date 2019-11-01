@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+
+<title th:text="#{login}"></title>
+<link th:replace="include/css">
+<script th:replace="include/js"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<!-- Main component for a primary marketing message or call to action -->
+		<div class="jumbotron">
+			<form id="login" method="POST" role="form" class="form-horizontal"
+				onsubmit="return login();">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{user-id}">
+					</label>
+					<div class="col-sm-4">
+						<input name="uid" class="form-control"
+							th:placeholder="#{user-id}" type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{password}">
+					</label>
+					<div class="col-sm-4">
+						<input name="password" class="form-control"
+							th:placeholder="#{password}" type="password">
+					</div>
+				</div>
+				<div th:if="${config.vcode}" class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{vcode}">
+					</label>
+					<div class="col-sm-3">
+						<input name="vcode" class="form-control" type="text">
+					</div>
+					<div class="col-sm-4">
+						<img id="vcode-img" th:alt="#{change-vcode}"
+							th:onclick="this.src='[(@{/Vcode})]?'+Math.random()" height="30px">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-2">
+						<button name="submit" type="submit"
+							class="btn btn-default btn-block" th:text="#{login}">
+						</button>
+					</div>
+					<div class="col-sm-2">
+						<a class="btn btn-default btn-block" th:href="@{/LostPassword}" th:text="#{lost-password}">
+						</a>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script th:src="${config.cdnUrl} + @{/js/md5-min.js}"></script>
+		<script>
+			function md5() {
+				if ($("input[name=password]").val() == "")
+					return false;
+				$("input[name=password]").val(
+						hex_md5($("input[name=password]").val()));
+				return true;
+			}
+			
+			function login() {
+				md5();
+				$.ajax({
+					url: "/api/Login",
+					type: "POST",
+					dataType: "json",
+					data: $("#login").serialize(),
+					success: function(result) {
+						if (result.back) {
+							if (navigator.userAgent.indexOf("Safari") > 0) {
+								//safari用history.go不会重新执行js，需要手动跳转
+								window.location.href = window.document.referrer;
+							} else {
+								history.go(-1);
+							}
+						} else {
+							window.location.href = "/.";
+						}
+					},
+					error: function(xhr, status, e) {
+						alert(xhr.responseText);
+						//清空密码框和验证码框
+						$("input[name=password]").val("");
+						$("input[name=vcode]").val("");
+						//刷新验证码
+						$("#vcode-img").attr("src", "[(@{\Vcode})]?" + Math.random());
+					}
+				});
+				return false;
+			}
+		</script>
+	</div>
+	<script th:if="${config.vcode}">
+		$(document).ready(function() {
+			$("#vcode-img").attr("src", "[(@{\Vcode})]?" + Math.random());
+		})
+	</script>
+</body>
+</html>

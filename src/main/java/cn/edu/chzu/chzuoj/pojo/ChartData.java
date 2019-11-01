@@ -1,5 +1,10 @@
 package cn.edu.chzu.chzuoj.pojo;
 
+/**
+ * 图表数据
+ * @author dzj0821
+ *
+ */
 public class ChartData {
 	private String timestamp;
 	private String count;

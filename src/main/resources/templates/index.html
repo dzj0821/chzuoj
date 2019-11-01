@@ -8,6 +8,8 @@
 <script th:src="@{/js/echarts.min.js}"></script>
 <title th:text="${config.name}"></title>
 <link th:replace="include/css">
+<script th:replace="include/js"></script>
+<script th:src="${config.cdnUrl} + @{/js/jquery.flot.js}"></script>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
@@ -21,10 +23,10 @@
 		<div th:replace="include/nav"></div>
 		<!-- Main component for a primary marketing message or call to action -->
 		<div class="jumbotron">
-			<center>
+			<div style="margin: 0 auto; width: 80%; text-align: center;">
 				[(#{recent-submission} + ': ' + ${speed} + '/' + #{${speedUnit}})]
-				<div id="submission" style="width: 80%; height: 300px"></div>
-			</center>
+				<div id="submission" style="width: 100%; height: 300px"></div>
+			</div>
 			<h3 th:if="${news.size() == 0}" th:text="#{no-news-now}"></h3>
 			<div th:if="${news.size() != 0}">
 				<div class='panel panel-default' style='width: 80%; margin: 0 auto;'>
@@ -36,7 +38,7 @@
 							<div class='panel-heading'>
 								<span style="font-size: larger" th:text="${singleNew.title}"></span>
 								-
-								<span style="font-size: smaLl" th:text="${singleNew.user.id}"></span>
+								<span style="font-size: small" th:text="${singleNew.user.id}"></span>
 							</div>
 							<div class='panel-body' th:text="${singleNew.content}"></div>
 						</div>
@@ -47,38 +49,35 @@
 			<!-- Bootstrap core JavaScript
     ================================================== -->
 			<!-- Placed at the end of the document so the pages load faster -->
-			<div th:replace="include/js"></div>
-			<script type="text/javascript"
-				th:src="${config.cdnUrl} + @{/js/jquery.flot.js}"></script>
 			<script type="text/javascript">
-		$( function () {
-			var d1 = [(${all})];
-			var d2 = [(${ac})];
-			$.plot( $( "#submission" ), [ {
-				label: "[(#{submit})]",
-				data: d1,
-				lines: {
-					show: true
-				}
-			}, {
-				label: "[(#{ac})]",
-				data: d2,
-				bars: {
-					show: true
-				}
-			} ], {
-				grid: {
-					backgroundColor: {
-						colors: [ "#fff", "#eee" ]
-					}
-				},
-				xaxis: {
-					mode: "time" //,
-					//max:(new Date()).getTime(),
-					//min:(new Date()).getTime()-100*24*3600*1000
-				}
-			} );
-		} );
-	</script>
+				$(document).ready(function() {
+					var d1 = [(${all})];
+					var d2 = [(${ac})];
+					$.plot($("#submission"), [{
+						label: "[(#{submit})]",
+						data: d1,
+						lines: {
+							show: true
+						}
+					}, {
+						label: "[(#{ac})]",
+						data: d2,
+						bars: {
+							show: true
+						}
+					}], {
+						grid: {
+							backgroundColor: {
+								colors: ["#fff", "#eee"]
+							}
+						},
+						xaxis: {
+							mode: "time" //,
+							//max:(new Date()).getTime(),
+							//min:(new Date()).getTime()-100*24*3600*1000
+						}
+					});
+				});
+			</script>
 </body>
 </html>

@@ -3,6 +3,11 @@ package cn.edu.chzu.chzuoj.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * 
+ * @author dzj0821
+ *
+ */
 @Component
 @ConfigurationProperties(prefix = "chzuoj")
 public class Config {
@@ -11,8 +16,13 @@ public class Config {
 	private String home;
 	private String adminMail;
 	private Integer onSiteContestId;
+	private Integer examContestId;
 	private String cdnUrl;
 	private String css;
+	private Boolean needLogin;
+	private Boolean openRegister;
+	private Boolean shareCode;
+	private Boolean vcode;
 
 	public DatabaseConfig getDatabase() {
 		return database;
@@ -54,6 +64,14 @@ public class Config {
 		this.onSiteContestId = onSiteContestId;
 	}
 	
+	public Integer getExamContestId() {
+		return examContestId;
+	}
+	
+	public void setExamContestId(Integer examContestId) {
+		this.examContestId = examContestId;
+	}
+	
 	public String getCdnUrl() {
 		return cdnUrl;
 	}
@@ -68,5 +86,37 @@ public class Config {
 	
 	public void setCss(String css) {
 		this.css = css;
+	}
+	
+	public Boolean getNeedLogin() {
+		return needLogin;
+	}
+	
+	public void setNeedLogin(Boolean needLogin) {
+		this.needLogin = needLogin;
+	}
+	
+	public Boolean getOpenRegister() {
+		return openRegister;
+	}
+	
+	public void setOpenRegister(Boolean openRegister) {
+		this.openRegister = openRegister;
+	}
+	
+	public Boolean getShareCode() {
+		return shareCode;
+	}
+	
+	public void setShareCode(Boolean shareCode) {
+		this.shareCode = shareCode;
+	}
+	
+	public Boolean getVcode() {
+		return vcode;
+	}
+	
+	public void setVcode(Boolean vcode) {
+		this.vcode = vcode;
 	}
 }

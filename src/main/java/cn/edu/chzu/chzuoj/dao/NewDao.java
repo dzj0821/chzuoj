@@ -15,6 +15,10 @@ import cn.edu.chzu.chzuoj.pojo.New;
  *
  */
 public interface NewDao {
+	/**
+	 * 获取有效的新闻列表
+	 * @return
+	 */
 	@Select("SELECT * FROM `news` WHERE `defunct` != 'Y' ORDER BY `importance` ASC, `time` DESC LIMIT 50")
 	@Results(id = "newMap", value = {
 			@Result(column = "news_id", property = "id", id = true),

@@ -1,5 +1,6 @@
 package cn.edu.chzu.chzuoj.component;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +19,26 @@ import cn.edu.chzu.chzuoj.listener.EventType;
  *
  */
 @Component
-public class UseConfigComponent implements BaseComponent {
+public class NeedLoginCheckComponent implements BaseComponent {
 	@Autowired
 	private Config config;
 
 	@Override
 	public boolean process(HttpServletRequest request, HttpServletResponse response, Map<String, String> params,
 			ModelAndView modelAndView, EventType type) {
-		modelAndView.addObject("config", config);
+		if (config.getNeedLogin()) {
+			String[] whiteList = {
+					"/Login",
+					"/LostPassword",
+					"/LostPassword2",
+					"/Register",
+			};
+			String uri = request.getRequestURI();
+			//如果不在白名单内
+			if (Arrays.stream(whiteList).allMatch((String string) -> !uri.equals(string))) {
+				return false;
+			}
+		}
 		return true;
 	}
 

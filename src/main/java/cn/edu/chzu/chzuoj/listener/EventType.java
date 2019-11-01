@@ -6,6 +6,4 @@ package cn.edu.chzu.chzuoj.listener;
  *
  */
 public enum EventType {
-	//测试类型
-	TEST
 }

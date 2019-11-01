@@ -1,5 +1,10 @@
 package cn.edu.chzu.chzuoj.config;
 
+/**
+ * 
+ * @author dzj0821
+ *
+ */
 public class DatabaseConfig {
 	private String host;
 	private Integer port;

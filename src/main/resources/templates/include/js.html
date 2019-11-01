@@ -19,10 +19,10 @@ $(document).ready(function(){
   $(".jumbotron").prepend(msg);
   $("form").append("<div id='csrf' />");
   $("#csrf").load("[(@{CSRF})]");
-  $("body").append("<div id=footer class=center >CHZUOJ "+(new Date()).getFullYear()+" </div>");
+  $("body").append("<div id='footer' class='center' >CHZUOJ "+(new Date()).getFullYear()+" </div>");
   $("body").append("<div class=center >版权所有 © 滁州学院 邮编：239000</div>");
 });
-
+/*
 $(".hint pre").each(function(){
 	var plus="<span class='glyphicon glyphicon-plus'>Click</span>";
 	var content=$(this);
@@ -32,6 +32,7 @@ $(".hint pre").each(function(){
 	});
 	
 });
+*/
 //console.log("To enable mathjax in hustoj, check line 15 in /home/judge/src/web/template/bs3/js.php");
 </script>
 
