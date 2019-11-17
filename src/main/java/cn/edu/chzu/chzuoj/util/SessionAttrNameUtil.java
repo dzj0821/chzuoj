@@ -41,6 +41,10 @@ public class SessionAttrNameUtil {
 		return config.getName() + SEPARATOR + "vcode";
 	}
 	
+	public static String getCsrfKeys() {
+		return config.getName() + SEPARATOR + "csrf_keys";
+	}
+	
 	public static String getSessionName(String string) {
 		return config.getName() + SEPARATOR + string;
 	}

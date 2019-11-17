@@ -9,7 +9,7 @@ chzuoj:
     #OJ名称
     name: 滁州学院在线评测系统
     #主页路径
-    home: ./
+    home: /
     #管理员的邮箱
     admin-mail: root@localhost
     #题目数据路径

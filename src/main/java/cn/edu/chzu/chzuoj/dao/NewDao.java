@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
-import cn.edu.chzu.chzuoj.pojo.New;
+import cn.edu.chzu.chzuoj.entity.New;
 
 /**
  * 
@@ -24,5 +24,5 @@ public interface NewDao {
 			@Result(column = "news_id", property = "id", id = true),
 			@Result(column = "user_id", property = "user", one = @One(select = "cn.edu.chzu.chzuoj.dao.UserDao.selectUserById"))
 	})
-	public List<New> selectUsedNews();
+	public List<New> selectNews();
 }

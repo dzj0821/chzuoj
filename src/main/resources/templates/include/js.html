@@ -14,13 +14,30 @@ or
 -->
 <script>
 $(document).ready(function(){
-  var msg="<marquee style='margin-top:10px' id=broadcast direction='left' scrollamount=3 scrolldelay=50 onMouseOver='this.stop()'"+
+  var msg = "<marquee style='margin-top:10px' id=broadcast direction='left' scrollamount=3 scrolldelay=50 onMouseOver='this.stop()'"+
       " onMouseOut='this.start()' class=toprow>[(${marqueeMessage})]</marquee>";
   $(".jumbotron").prepend(msg);
-  $("form").append("<div id='csrf' />");
-  $("#csrf").load("[(@{CSRF})]");
-  $("body").append("<div id='footer' class='center' >CHZUOJ "+(new Date()).getFullYear()+" </div>");
-  $("body").append("<div class=center >版权所有 © 滁州学院 邮编：239000</div>");
+  //csrf
+  $.ajax({
+	  "url": "[(@{/api/csrf})]",
+	  "dataType": "json",
+	  "success": function(json) {
+		  $("[name='csrf']").val(json.data.token);
+	  },
+	  "error": function(xhr, status, e) {
+		  alert(xhr.responseJSON.message);
+	  }
+  });
+  var list = document.getElementsByTagName("form");
+  for (var i = 0; i < list.length; i++) {
+	  var csrf = document.createElement("input");
+	  csrf.type = "hidden";
+	  csrf.name = "csrf";
+	  list[i].appendChild(csrf);
+  }
+  //页尾
+  $("body").append("<div id='footer' class='center' >CHZUOJ " + (new Date()).getFullYear() + " </div>");
+  $("body").append("<div class='center'>版权所有 © 滁州学院 邮编：239000</div>");
 });
 /*
 $(".hint pre").each(function(){

@@ -1,4 +1,4 @@
-package cn.edu.chzu.chzuoj.pojo;
+package cn.edu.chzu.chzuoj.entity;
 
 /**
  * 图表数据

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Select;
 
-import cn.edu.chzu.chzuoj.pojo.ChartData;
+import cn.edu.chzu.chzuoj.entity.ChartData;
 
 /**
  * 
