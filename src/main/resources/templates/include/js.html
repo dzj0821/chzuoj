@@ -13,43 +13,47 @@ or
 </script>
 -->
 <script>
-$(document).ready(function(){
-  var msg = "<marquee style='margin-top:10px' id=broadcast direction='left' scrollamount=3 scrolldelay=50 onMouseOver='this.stop()'"+
-      " onMouseOut='this.start()' class=toprow>[(${marqueeMessage})]</marquee>";
-  $(".jumbotron").prepend(msg);
-  //csrf
-  $.ajax({
-	  "url": "[(@{/api/csrf})]",
-	  "dataType": "json",
-	  "success": function(json) {
-		  $("[name='csrf']").val(json.data.token);
-	  },
-	  "error": function(xhr, status, e) {
-		  alert(xhr.responseJSON.message);
-	  }
-  });
-  var list = document.getElementsByTagName("form");
-  for (var i = 0; i < list.length; i++) {
-	  var csrf = document.createElement("input");
-	  csrf.type = "hidden";
-	  csrf.name = "csrf";
-	  list[i].appendChild(csrf);
-  }
-  //页尾
-  $("body").append("<div id='footer' class='center' >CHZUOJ " + (new Date()).getFullYear() + " </div>");
-  $("body").append("<div class='center'>版权所有 © 滁州学院 邮编：239000</div>");
-});
-/*
-$(".hint pre").each(function(){
-	var plus="<span class='glyphicon glyphicon-plus'>Click</span>";
-	var content=$(this);
-	$(this).before(plus);
-	$(this).prev().click(function(){
-		content.toggle();
+	$(document).ready(function() {
+		var msg = "<marquee style='margin-top:10px' id=broadcast direction='left' scrollamount=3 scrolldelay=50 onMouseOver='this.stop()'"
+			+ " onMouseOut='this.start()' class=toprow>[(${marqueeMessage})]</marquee>";
+		$(".jumbotron").prepend(msg);
+		//页尾
+		$("body").append("<div id='footer' class='center' >CHZUOJ " + (new Date()).getFullYear() + " </div>");
+		$("body").append("<div class='center'>版权所有 © 滁州学院 邮编：239000</div>");
 	});
+	/*
+	 $(".hint pre").each(function(){
+	 var plus="<span class='glyphicon glyphicon-plus'>Click</span>";
+	 var content=$(this);
+	 $(this).before(plus);
+	 $(this).prev().click(function(){
+	 content.toggle();
+	 });
 	
-});
-*/
-//console.log("To enable mathjax in hustoj, check line 15 in /home/judge/src/web/template/bs3/js.php");
+	 });
+	 */
+	//console.log("To enable mathjax in hustoj, check line 15 in /home/judge/src/web/template/bs3/js.php");
+</script>
+<script th:if="${config.csrfCheck}">
+	$(document).ready(function() {
+		//csrf
+		$.ajax({
+			"url" : "[(@{/api/csrf})]",
+			"dataType" : "json",
+			"success" : function(json) {
+				$("[name='csrf']").val(json.data.token);
+			},
+			"error" : function(xhr, status, e) {
+				alert(xhr.responseJSON.message);
+			}
+		});
+		var list = document.getElementsByTagName("form");
+		for (var i = 0; i < list.length; i++) {
+			var csrf = document.createElement("input");
+			csrf.type = "hidden";
+			csrf.name = "csrf";
+			list[i].appendChild(csrf);
+		}
+	});
 </script>
 

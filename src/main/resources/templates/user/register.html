@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+<title th:text="#{register}"></title>
+<link th:replace="include/css">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<div class="jumbotron">
+			<form id="register" role="form" class="form-horizontal"
+				onsubmit="return register();">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{register-info}"></label>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{user-id}"></label>
+					<div class="col-sm-4">
+						<input name="uid" class="form-control"
+							th:placeholder="#{user-id} + '*'" type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{name}"></label>
+					<div class="col-sm-4">
+						<input name="name" class="form-control"
+							th:placeholder="#{name} + '*'" type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{password}"></label>
+					<div class="col-sm-4">
+						<input name="password" class="form-control"
+							th:placeholder="#{password} + '*'" type="password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{repeat-password}"></label>
+					<div class="col-sm-4">
+						<input id="repeat-password" class="form-control"
+							th:placeholder="#{repeat-password} + '*'" type="password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{clazz}"></label>
+					<div class="col-sm-4">
+						<input name="clazz" class="form-control"
+							th:placeholder="#{clazz-tip}" type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{email}"></label>
+					<div class="col-sm-4">
+						<input name="email" class="form-control"
+							th:placeholder="#{email-tip}" type="text">
+					</div>
+				</div>
+				<div th:if="${config.vcode}" class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{vcode}"></label>
+					<div class="col-sm-3">
+						<input name="vcode" class="form-control"
+							th:placeholder="#{vcode} + '*'" type="text">
+					</div>
+					<div class="col-sm-4">
+						<img id="vcode-img" th:src="@{/vcode}" th:alt="#{change-vcode}"
+							th:onclick="this.src='[(@{/vcode})]?'+Math.random()"
+							height="30px">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-2">
+						<button name="submit" type="submit"
+							class="btn btn-default btn-block" th:text="#{register}"></button>
+					</div>
+					<div class="col-sm-2">
+						<button name="submit" type="reset"
+							class="btn btn-default btn-block" th:text="#{reset}"></button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- /container -->
+	<script th:replace="include/js"></script>
+	<script>
+		$("input").attr("class", "form-control");
+	</script>
+	<script>
+		function register() {
+			if ($("#repeat-password").val() != $("[name=password]").val()) {
+				alert("[(#{password-not-same})]");
+				return false;
+			}
+			$.ajax({
+				url : "[(@{/api/user/register})]",
+				type : "POST",
+				dataType : "json",
+				data : $("#register").serialize(),
+				success : function(result) {
+					alert(result.message);
+					if (navigator.userAgent.indexOf("Safari") > 0) {
+						//safari用history.go不会重新执行js，需要手动跳转
+						window.location.href = window.document.referrer;
+					} else {
+						history.go(-1);
+					}
+				},
+				error : function(xhr, status, e) {
+					alert(xhr.responseJSON.message);
+					//清空密码框和验证码框
+					$("input[name=password]").val("");
+					$("#repeat-password").val("");
+					$("input[name=vcode]").val("");
+					//刷新验证码
+					$("#vcode-img").attr("src",
+							"[(@{/vcode})]?" + Math.random());
+				}
+			});
+			return false;
+		}
+	</script>
+</body>
+</html>

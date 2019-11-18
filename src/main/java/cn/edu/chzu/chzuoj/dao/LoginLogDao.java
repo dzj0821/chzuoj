@@ -23,10 +23,11 @@ public interface LoginLogDao {
 	
 	/**
 	 * 用户登录成功后，插入日志记录
-	 * @param userId
-	 * @param ip
+	 * @param userId 登录的用户
+	 * @param message 登录信息
+	 * @param ip 登录ip
 	 * @return
 	 */
-	@Insert("INSERT INTO `loginlog` VALUES(#{userId}, 'login ok', #{ip}, NOW())")
-	public int insertLoginOkLog(@Param("userId") String userId, @Param("ip") String ip);
+	@Insert("INSERT INTO `loginlog` VALUES(#{userId}, #{message}, #{ip}, NOW())")
+	public int insertLog(@Param("userId") String userId, @Param("message") String message, @Param("ip") String ip);
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.edu.chzu.chzuoj.annotation.NeedNotLogin;
+import cn.edu.chzu.chzuoj.annotation.OnSiteContestEnable;
 import cn.edu.chzu.chzuoj.config.Config;
 import cn.edu.chzu.chzuoj.util.SessionAttrNameUtil;
 
@@ -21,17 +22,27 @@ public class UserController extends BaseController {
 	@Autowired
 	private Config config;
 	
+	@OnSiteContestEnable
 	@NeedNotLogin
 	@GetMapping("/login")
 	public ModelAndView login() {
-		ModelAndView modelAndView = new ModelAndView();
 		if (request.getSession().getAttribute(SessionAttrNameUtil.getUserId()) != null) {
 			//如果已登录，提示需要先登出
-			modelAndView.addObject("message", "please-logout-first");
-			modelAndView.addObject("url", "/logout");
-			modelAndView.setViewName("message");
-			return modelAndView;
+			return message("please-logout-first", "/logout");
 		}
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("config", config);
+		return modelAndView;
+	}
+	
+	@OnSiteContestEnable
+	@NeedNotLogin
+	@GetMapping("/register")
+	public ModelAndView register() {
+		if (!config.getOpenRegister()) {
+			return message("not-open-register");
+		}
+		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("config", config);
 		return modelAndView;
 	}

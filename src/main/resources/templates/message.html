@@ -15,7 +15,6 @@ int back: alert=true时代表页面回退，值为回退的页面数
 <script th:if="${alert != null and alert}">
 		[(${message != null} ? 'alert("' + #{${message}} + '");')]
 		[(${url != null} ? 'window.location.href =' + @{${url}} + ';' )]
-		[(${back != null} ? 'history.go(-' + ${back} + ');')]
 	</script>
 <link th:if="${alert == null}" th:replace="include/css">
 </head>
@@ -27,6 +26,5 @@ int back: alert=true时代表页面回退，值为回退的页面数
 			<a th:if="${url != null}" th:href="@{${url}}" th:text="#{${message}}"></a>
 		</div>
 	</div>
-	<script th:replace="include/js"></script>
 </body>
 </html>

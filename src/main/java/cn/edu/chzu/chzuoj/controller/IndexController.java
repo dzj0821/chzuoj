@@ -7,10 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.edu.chzu.chzuoj.config.Config;
+import cn.edu.chzu.chzuoj.annotation.OnSiteContestEnable;
 import cn.edu.chzu.chzuoj.entity.New;
 import cn.edu.chzu.chzuoj.service.IndexService;
-import cn.edu.chzu.chzuoj.service.MessageService;
 import cn.edu.chzu.chzuoj.service.NewService;
 import cn.edu.chzu.chzuoj.util.EncodeUtil;
 import cn.edu.chzu.chzuoj.util.SessionAttrNameUtil;
@@ -23,23 +22,14 @@ import cn.edu.chzu.chzuoj.util.SessionAttrNameUtil;
 @Controller
 public class IndexController extends BaseController {
 	@Autowired
-	private Config config;
-	@Autowired
-	private MessageService messageService;
-	@Autowired
 	private NewService newService;
 	@Autowired
 	private IndexService indexService;
 	
+	@OnSiteContestEnable
 	@RequestMapping("/")
 	public ModelAndView index() {
 		ModelAndView modelAndView = new ModelAndView("index");
-		modelAndView.addObject("config", config);
-		//nav需要用到，用于高亮当前页面所在标签
-		modelAndView.addObject("currentUrl", request.getRequestURI());
-		//nav的滚动公告
-		String marqueeMessage = messageService.getMarqueeMessage();
-		modelAndView.addObject("marqueeMessage", marqueeMessage);
 		//主页显示的新闻
 		List<New> news = newService.getNews();
 		modelAndView.addObject("news", news);

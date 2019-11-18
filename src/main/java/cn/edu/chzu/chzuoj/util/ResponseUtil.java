@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 /**
  * 
@@ -12,21 +11,15 @@ import org.springframework.http.ResponseEntity;
  *
  */
 public class ResponseUtil {
-	/**
-	 * 统一api json接口
-	 * @param status 返回码状态
-	 * @param message 返回消息
-	 * @param data 数据
-	 * @return 用于springmvc的ResponseEntity
-	 */
-	public static ResponseEntity<Map<String, Object>> json(HttpStatus status, String message, Map<String, Object> data) {
+	public static Map<String, Object> json(HttpStatus status, String key, Map<String, Object> data) {
 		HashMap<String, Object> map = new HashMap<String, Object>(3);
 		map.put("status", status.value());
-		if (message == null) {
-			message = status.toString();
+		if (key == null) {
+			map.put("message", status.toString());
+		} else {
+			map.put("message", LocaleUtil.getMessage(key));
 		}
-		map.put("message", message);
 		map.put("data", data);
-		return new ResponseEntity<Map<String, Object>>(map, status);
+		return map;
 	}
 }

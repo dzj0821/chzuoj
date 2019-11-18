@@ -20,15 +20,15 @@ public class User {
 	private Integer language;
 	private String password;
 	private Timestamp registerTime;
-	private String nick;
-	private String school;
+	private String name;
+	private String clazz;
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", submit=" + submit + ", solved=" + solved + ", defunct="
 				+ defunct + ", ip=" + ip + ", accessTime=" + accessTime + ", volume=" + volume + ", language="
-				+ language + ", password=" + password + ", registerTime=" + registerTime + ", nick=" + nick
-				+ ", school=" + school + "]";
+				+ language + ", password=" + password + ", registerTime=" + registerTime + ", name=" + name + ", clazz="
+				+ clazz + "]";
 	}
 
 	public String getId() {
@@ -119,19 +119,19 @@ public class User {
 		this.registerTime = registerTime;
 	}
 
-	public String getNick() {
-		return nick;
+	public String getName() {
+		return name;
 	}
 
-	public void setNick(String nick) {
-		this.nick = nick;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getSchool() {
-		return school;
+	public String getClazz() {
+		return clazz;
 	}
 
-	public void setSchool(String school) {
-		this.school = school;
+	public void setClazz(String clazz) {
+		this.clazz = clazz;
 	}
 }

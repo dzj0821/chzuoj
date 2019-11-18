@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,12 +8,11 @@
 
 <title th:text="#{login}"></title>
 <link th:replace="include/css">
-<script th:replace="include/js"></script>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+<![endif]-->
 </head>
 
 <body>
@@ -22,14 +21,13 @@
 		<div th:replace="include/nav"></div>
 		<!-- Main component for a primary marketing message or call to action -->
 		<div class="jumbotron">
-			<form id="login" method="POST" role="form" class="form-horizontal"
-				onsubmit="return login();">
+			<form id="login" role="form" class="form-horizontal" onsubmit="return login();">
 				<div class="form-group">
 					<label class="col-sm-4 control-label" th:text="#{user-id}">
 					</label>
 					<div class="col-sm-4">
-						<input name="uid" class="form-control"
-							th:placeholder="#{user-id}" type="text">
+						<input name="uid" class="form-control" th:placeholder="#{user-id}"
+							type="text">
 					</div>
 				</div>
 				<div class="form-group">
@@ -41,29 +39,29 @@
 					</div>
 				</div>
 				<div th:if="${config.vcode}" class="form-group">
-					<label class="col-sm-4 control-label" th:text="#{vcode}">
-					</label>
+					<label class="col-sm-4 control-label" th:text="#{vcode}"> </label>
 					<div class="col-sm-3">
-						<input name="vcode" class="form-control" type="text">
+						<input name="vcode" class="form-control" type="text" th:placeholder="#{vcode}">
 					</div>
 					<div class="col-sm-4">
-						<img id="vcode-img" th:alt="#{change-vcode}"
-							th:onclick="this.src='[(@{/Vcode})]?'+Math.random()" height="30px">
+						<img id="vcode-img" th:src="@{/vcode}" th:alt="#{change-vcode}"
+							th:onclick="this.src='[(@{/vcode})]?'+Math.random()"
+							height="30px">
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-4 col-sm-2">
 						<button name="submit" type="submit"
-							class="btn btn-default btn-block" th:text="#{login}">
-						</button>
+							class="btn btn-default btn-block" th:text="#{login}"></button>
 					</div>
 					<div class="col-sm-2">
-						<a class="btn btn-default btn-block" th:href="@{/LostPassword}" th:text="#{lost-password}">
-						</a>
+						<a class="btn btn-default btn-block" th:href="@{/LostPassword}"
+							th:text="#{lost-password}"> </a>
 					</div>
 				</div>
 			</form>
 		</div>
+		<script th:replace="include/js"></script>
 		<script th:src="${config.cdnUrl} + @{/js/md5-min.js}"></script>
 		<script>
 			function md5() {
@@ -106,10 +104,5 @@
 			}
 		</script>
 	</div>
-	<script th:if="${config.vcode}">
-		$(document).ready(function() {
-			$("#vcode-img").attr("src", "[(@{/vcode})]?" + Math.random());
-		})
-	</script>
 </body>
 </html>

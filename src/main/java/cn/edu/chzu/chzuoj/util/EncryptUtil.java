@@ -1,5 +1,6 @@
 package cn.edu.chzu.chzuoj.util;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
  * @author dzj0821
  *
  */
-public class MathUtil {
+public class EncryptUtil {
 	public static String md5(String string) {
 		MessageDigest digest = null;
 		try {
@@ -18,7 +19,14 @@ public class MathUtil {
 			e.printStackTrace();
 			return null;
 		}
-		return new BigInteger(1, digest.digest()).toString(16);
+		byte[] bytes = null;
+		try {
+			bytes = string.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return new BigInteger(1, digest.digest(bytes)).toString(16);
 	}
 
 	public static byte[] sha1(String string) {
@@ -29,7 +37,13 @@ public class MathUtil {
 			e.printStackTrace();
 			return null;
 		}
-		digest.update(string.getBytes());
-		return digest.digest();
+		byte[] bytes = null;
+		try {
+			bytes = string.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return digest.digest(bytes);
 	}
 }

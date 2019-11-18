@@ -41,6 +41,10 @@ chzuoj:
     share-code: false
     #是否开启验证码
     vcode: true
+    #是否开启csrf校验，可防止csrf攻击
+    csrf-check: true
+    #注册是否需要管理员审核
+    register-need-review: true
 server:
     port: 8080
     servlet:

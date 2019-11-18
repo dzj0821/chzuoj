@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import cn.edu.chzu.chzuoj.config.Config;
+import cn.edu.chzu.chzuoj.interceptor.CsrfCheckInterceptor;
+import cn.edu.chzu.chzuoj.interceptor.GlobalVarInterceptor;
 import cn.edu.chzu.chzuoj.interceptor.NeedLoginCheckInterceptor;
 import cn.edu.chzu.chzuoj.interceptor.OnSiteContentCehckInterceptor;
 
@@ -16,13 +19,27 @@ import cn.edu.chzu.chzuoj.interceptor.OnSiteContentCehckInterceptor;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 	@Autowired
+	private Config config;
+	@Autowired
 	private NeedLoginCheckInterceptor needLoginCheckInterceptor;
 	@Autowired
 	private OnSiteContentCehckInterceptor onSiteContentCehckInterceptor;
+	@Autowired
+	private GlobalVarInterceptor globalVarInterceptor;
+	@Autowired
+	private CsrfCheckInterceptor csrfCheckInterceptor;
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(needLoginCheckInterceptor);
-		registry.addInterceptor(onSiteContentCehckInterceptor);
+		registry.addInterceptor(globalVarInterceptor);
+		if (config.getNeedLogin()) {
+			registry.addInterceptor(needLoginCheckInterceptor);
+		}
+		if (config.getOnSiteContestId() != null) {
+			registry.addInterceptor(onSiteContentCehckInterceptor);
+		}
+		if (config.getCsrfCheck()) {
+			registry.addInterceptor(csrfCheckInterceptor);
+		}
 	}
 }
