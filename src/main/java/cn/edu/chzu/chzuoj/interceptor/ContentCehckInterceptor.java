@@ -7,16 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 
-import cn.edu.chzu.chzuoj.annotation.OnSiteContestEnable;
+import cn.edu.chzu.chzuoj.annotation.ContestEnable;
+import cn.edu.chzu.chzuoj.entity.ResponseType;
 
 
 /**
- * 用于实现on-site-content（现场赛模式）功能，当进入除了现场赛以外的页面时跳转到现场赛页面
+ * 当比赛模式开启时此拦截器将会启用，防止用于进入比赛以外的页面
  * @author dzj0821
  *
  */
 @Component
-public class OnSiteContentCehckInterceptor extends BaseInterceptor {
+public class ContentCehckInterceptor extends BaseInterceptor {
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -26,8 +27,18 @@ public class OnSiteContentCehckInterceptor extends BaseInterceptor {
 		 }
 		 if (handler instanceof HandlerMethod) {
 			 HandlerMethod method = (HandlerMethod) handler;
-			 if (method.getMethodAnnotation(OnSiteContestEnable.class) == null) {
-				 alert(HttpStatus.FORBIDDEN, "on-site-contest-not-allowed", response);
+			 if (method.getMethodAnnotation(ContestEnable.class) == null) {
+				 ResponseType type = getResponseType(method);
+				 switch (type) {
+				case HTML:
+					alert(HttpStatus.FORBIDDEN, "contest-mode-not-allowed", response);
+					break;
+				case JSON:
+					json(HttpStatus.FORBIDDEN, "contest-mode-not-allowed", response);
+				default:
+					response.setStatus(HttpStatus.FORBIDDEN.value());
+					break;
+				}
 				 return false;
 			 }
 		 }

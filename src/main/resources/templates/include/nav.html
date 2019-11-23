@@ -135,7 +135,7 @@
 						</li>
 						<li class="need-login">
 							&nbsp;
-							<a th:href="@{/user/logout}">
+							<a href="javascript:logout()">
 								<span id="red" th:text="#{logout}"></span>
 							</a>
 						</li>
@@ -160,21 +160,15 @@
 						<li>
 							&nbsp;
 							<script>
-							var xmlHttp;
-							if (window.XMLHttpRequest) {
-								// code for IE7+, Firefox, Chrome, Opera, Safari
-							    xmlHttp = new XMLHttpRequest();
-							} else {
-								// code for IE6, IE5
-							    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-							}
-							xmlHttp.onreadystatechange = function() {
-							    if (xmlHttp.readyState == 4) {
+							var request = new XMLHttpRequest();
+							request.open("GET", "/api/user/profile?" + Math.random(), true);
+							request.onreadystatechange = function() {
+							    if (request.readyState == 4) {
 							    	//arr存储需要移除的标签
 							    	var arr;
-							    	if (xmlHttp.status == 200) {
+							    	if (request.status == 200) {
 							    		//200代表已登录，否则表示未登录
-							    		var data = JSON.parse(xmlHttp.responseText).data;
+							    		var data = JSON.parse(request.responseText).data;
 								        arr = document.getElementsByClassName("not-login");
 							        	document.getElementById("profile").innerHTML = data.uid;
 							        	if (!data.shareCode) {
@@ -199,8 +193,43 @@
 							        }
 							    }
 							}
-							xmlHttp.open("GET", "/api/user/profile?" + Math.random(), true);
-							xmlHttp.send();
+							request.send();
+							</script>
+							<script>
+								function logout() {
+									var csrf = [(${config.csrfCheck})];
+									var token;
+									if (csrf) {
+										var request = new XMLHttpRequest();
+										//同步请求csrf token
+										request.open("GET", "/api/csrf", false);
+										request.send();
+										if (request.status != 200) {
+											alert(JSON.parse(request.responseText).message);
+											return;
+										}
+										//token请求成功的情况
+										token = JSON.parse(request.responseText).data.token;
+									}
+									request = new XMLHttpRequest();
+									//登出请求
+									request.open("POST", "/api/user/logout", true);
+									request.onreadystatechange = function() {
+									    if (request.readyState == 4) {
+									    	//不管是否成功，都显示响应消息
+									    	alert(JSON.parse(request.responseText).message);
+									    	if (request.status == 200) {
+									    		window.location.href = "[(@{${config.home}})]";
+									    	}
+									    }
+									}
+									if (csrf) {
+										request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+										request.send("csrf=" + token);
+									} else {
+										request.send();
+									}
+								}
 							</script>
 						</li>
 					</ul>

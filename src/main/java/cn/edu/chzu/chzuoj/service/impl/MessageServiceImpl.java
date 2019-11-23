@@ -21,4 +21,8 @@ public class MessageServiceImpl implements MessageService {
 		return messageDao.selectMarqueeMessage();
 	}
 
+	@Override
+		public String getFooterMessage() {
+			return messageDao.selectFooterMessage();
+		}
 }

@@ -90,7 +90,7 @@ public class VcodeServiceImpl implements VcodeService {
 			return true;
 		}
 		//这里一定要判断sessionCode不为null
-		return sessionCode != null && code != null && sessionCode.equals(code.trim());
+		return sessionCode != null && code != null && sessionCode.equals(code);
 	}
 
 }

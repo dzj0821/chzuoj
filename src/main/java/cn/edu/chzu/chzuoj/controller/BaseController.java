@@ -57,22 +57,27 @@ public abstract class BaseController implements WebBindingInitializer {
 	 * 统一api json接口
 	 * @param status 返回码状态
 	 * @param key 返回消息在国际化中的key
+	 * @param args 返回消息的参数
 	 * @param data 数据
 	 * @return 用于springmvc的ResponseEntity
 	 */
-	protected ResponseEntity<Map<String, Object>> json(HttpStatus status, String key, Map<String, Object> data) {
-		return new ResponseEntity<Map<String, Object>>(ResponseUtil.json(status, key, data), status);
+	protected ResponseEntity<Map<String, Object>> json(HttpStatus status, String key, String[] args, Map<String, Object> data) {
+		return new ResponseEntity<Map<String, Object>>(ResponseUtil.json(status, key, args, data), status);
 	}
 	
 	protected ResponseEntity<Map<String, Object>> json(HttpStatus status) {
-		return json(status, null, null);
+		return json(status, null, null, null);
 	}
 	
 	protected ResponseEntity<Map<String, Object>> json(HttpStatus status, String key) {
-		return json(status, key, null);
+		return json(status, key, null, null);
+	}
+	
+	protected ResponseEntity<Map<String, Object>> json(HttpStatus status, String key, String[] args) {
+		return json(status, key, args, null);
 	}
 	
 	protected ResponseEntity<Map<String, Object>> json(HttpStatus status, Map<String, Object> data) {
-		return json(status, null, data);
+		return json(status, null, null, data);
 	}
 }

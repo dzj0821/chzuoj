@@ -14,9 +14,9 @@ public interface PrivilegeDao {
 	
 	/**
 	 * 获取用户拥有的权限
-	 * @param userId
+	 * @param uid
 	 * @return
 	 */
-	@Select("SELECT `rightstr` FROM `privilege` WHERE `user_id` = #{userId}")
-	public List<String> selectPermissionByUserId(@Param("userId") String userId);
+	@Select("SELECT `rightstr` FROM `privilege` WHERE `user_id` = #{uid}")
+	public List<String> selectPermissionByUserId(@Param("uid") String uid);
 }

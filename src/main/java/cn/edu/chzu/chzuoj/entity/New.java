@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  */
 public class New {
 	private Integer id;
-	private User user;
+	private String userId;
 	private String title;
 	private String content;
 	private Timestamp time;
@@ -18,7 +18,7 @@ public class New {
 
 	@Override
 	public String toString() {
-		return "New [id=" + id + ", user=" + user + ", title=" + title + ", content=" + content + ", time=" + time
+		return "New [id=" + id + ", userId=" + userId + ", title=" + title + ", content=" + content + ", time=" + time
 				+ ", importance=" + importance + ", defunct=" + defunct + "]";
 	}
 
@@ -30,12 +30,12 @@ public class New {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
+	
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getTitle() {

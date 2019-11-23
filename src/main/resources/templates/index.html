@@ -38,7 +38,7 @@
 							<div class='panel-heading'>
 								<span style="font-size: larger" th:text="${singleNew.title}"></span>
 								-
-								<span style="font-size: small" th:text="${singleNew.user.id}"></span>
+								<span style="font-size: small" th:text="${singleNew.userId}"></span>
 							</div>
 							<div class='panel-body' th:text="${singleNew.content}"></div>
 						</div>
@@ -72,7 +72,8 @@
 							}
 						},
 						xaxis: {
-							mode: "time" //,
+							mode: "time",
+							timeformat: "%y/%m/%d"//,
 							//max:(new Date()).getTime(),
 							//min:(new Date()).getTime()-100*24*3600*1000
 						}

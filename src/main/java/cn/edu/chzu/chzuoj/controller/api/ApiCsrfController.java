@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import cn.edu.chzu.chzuoj.annotation.NeedNotLogin;
-import cn.edu.chzu.chzuoj.annotation.OnSiteContestEnable;
+import cn.edu.chzu.chzuoj.annotation.ContestEnable;
 import cn.edu.chzu.chzuoj.config.Config;
 import cn.edu.chzu.chzuoj.controller.BaseController;
 import cn.edu.chzu.chzuoj.util.SessionAttrNameUtil;
@@ -34,7 +34,7 @@ public class ApiCsrfController extends BaseController {
 	 */
 	private static final int MAX_CSRF_TOKEN_COUNT = 10;
 	
-	@OnSiteContestEnable
+	@ContestEnable
 	@NeedNotLogin
 	@GetMapping("/api/csrf")
 	public ResponseEntity<Map<String, Object>> csrf() {

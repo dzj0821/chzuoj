@@ -19,4 +19,7 @@ public class EncodeUtil {
 		}
 		return json;
 	}
+	public static String encodeByJs(String string) {
+		return string.replaceAll("\"", "\\\\\"");
+	}
 }

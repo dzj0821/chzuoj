@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LocaleUtil {
-	@Autowired
+	
 	private static MessageSource messageSource;
 	
 	public static String getMessage(String key) {

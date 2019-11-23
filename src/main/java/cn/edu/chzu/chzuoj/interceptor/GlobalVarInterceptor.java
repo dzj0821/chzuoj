@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import cn.edu.chzu.chzuoj.config.Config;
 import cn.edu.chzu.chzuoj.service.MessageService;
+import cn.edu.chzu.chzuoj.util.EncodeUtil;
 
 /**
  * 用于给ModelAndView添加常用的变量信息
@@ -31,8 +32,11 @@ public class GlobalVarInterceptor extends BaseInterceptor {
 			//nav需要用到，用于高亮当前页面所在标签
 			modelAndView.addObject("currentUrl", request.getRequestURI());
 			//nav的滚动公告
-			String marqueeMessage = messageService.getMarqueeMessage();
+			String marqueeMessage = EncodeUtil.encodeByJs(messageService.getMarqueeMessage());
 			modelAndView.addObject("marqueeMessage", marqueeMessage);
+			//页尾内容
+			String footerMessage = EncodeUtil.encodeByJs(messageService.getFooterMessage());
+			modelAndView.addObject("footerMessage", footerMessage);
 		}
 	}
 }

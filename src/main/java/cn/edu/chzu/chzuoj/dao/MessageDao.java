@@ -14,4 +14,11 @@ public interface MessageDao {
 	 */
 	@Select("SELECT text FROM `message` WHERE type = 'marquee'")
 	public String selectMarqueeMessage();
+	
+	/**
+	 * 获取页尾内容
+	 * @return
+	 */
+	@Select("SELECT text FROM `message` WHERE type = 'footer'")
+	public String selectFooterMessage();
 }

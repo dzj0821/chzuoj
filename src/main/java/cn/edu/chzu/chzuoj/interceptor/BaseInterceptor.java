@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.HandlerMethod;
@@ -14,7 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cn.edu.chzu.chzuoj.config.Config;
 import cn.edu.chzu.chzuoj.entity.ResponseType;
+import cn.edu.chzu.chzuoj.util.EncodeUtil;
 import cn.edu.chzu.chzuoj.util.LocaleUtil;
 import cn.edu.chzu.chzuoj.util.ResponseUtil;
 
@@ -25,6 +28,8 @@ import cn.edu.chzu.chzuoj.util.ResponseUtil;
  *
  */
 public abstract class BaseInterceptor implements HandlerInterceptor {
+	@Autowired
+	private Config config;
 
 	protected ResponseType getResponseType(HandlerMethod method) {
 		Class<?> returnType = method.getMethod().getReturnType();
@@ -37,35 +42,46 @@ public abstract class BaseInterceptor implements HandlerInterceptor {
 		return ResponseType.UNKNOWN;
 	}
 
-	protected void json(HttpStatus status, String key, Map<String, Object> data, HttpServletResponse response) throws IOException {
+	protected void json(HttpStatus status, String key, String[] args, Map<String, Object> data, HttpServletResponse response) throws IOException {
 		response.setStatus(status.value());
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		Map<String, Object> json = ResponseUtil.json(status, key, data);
+		Map<String, Object> json = ResponseUtil.json(status, key, args, data);
 		ObjectMapper mapper = new ObjectMapper();
 		response.getWriter().append(mapper.writeValueAsString(json));
 		
 	}
 
 	protected void json(HttpStatus status, HttpServletResponse response) throws IOException {
-		json(status, null, null, response);
+		json(status, null, null, null, response);
 	}
 
 	protected void json(HttpStatus status, String key, HttpServletResponse response) throws IOException {
-		json(status, key, null, response);
+		json(status, key, null, null, response);
+	}
+	
+	protected void json(HttpStatus status, String key, String[] args, HttpServletResponse response) throws IOException {
+		json(status, key, args, null, response);
 	}
 
 	protected void json(HttpStatus status, Map<String, Object> data, HttpServletResponse response) throws IOException {
-		json(status, null, data, response);
+		json(status, null, null, data, response);
 	}
 
 	protected void alert(HttpStatus status, String key, HttpServletResponse response) throws IOException {
-		String message = LocaleUtil.getMessage(key);
+		alert(status, key, null, response);
+	}
+	
+	protected void alert(HttpStatus status, String key, String[] args, HttpServletResponse response) throws IOException {
+		String message = LocaleUtil.getMessage(key, args);
+		message = EncodeUtil.encodeByJs(message);
+		//主页链接
+		String home = EncodeUtil.encodeByJs(config.getHome());
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
 		response.setStatus(status.value());
-		response.getWriter().append("<html><head><script>alert(\"" + message.replaceAll("\"", "\\\\\"")
-		+ "\");window.location.href=\"/\";</script></head><body></body></html>");
+		response.getWriter().append("<html><head><script>alert(\"" + message + "\");window.location.href=\"" 
+		+ home + "\";</script></head><body></body></html>");
 	}
 
 	/**

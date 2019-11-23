@@ -14,12 +14,29 @@ or
 -->
 <script>
 	$(document).ready(function() {
-		var msg = "<marquee style='margin-top:10px' id=broadcast direction='left' scrollamount=3 scrolldelay=50 onMouseOver='this.stop()'"
-			+ " onMouseOut='this.start()' class=toprow>[(${marqueeMessage})]</marquee>";
+		var msg = document.createElement("marquee");
+		msg.style.marginTop = "10px";
+		msg.id = "broadcast";
+		msg.direction = "left";
+		msg.scrollAmount = 3;
+		msg.scrollDelay = 50;
+		msg.onmouseover = msg.stop;
+		msg.onmouseout = msg.start;
+		msg.className = "toprow";
+		msg.innerHTML = "[(${marqueeMessage})]";
 		$(".jumbotron").prepend(msg);
 		//页尾
-		$("body").append("<div id='footer' class='center' >CHZUOJ " + (new Date()).getFullYear() + " </div>");
-		$("body").append("<div class='center'>版权所有 © 滁州学院 邮编：239000</div>");
+		var footer = document.createElement("div");
+		footer.id = "footer";
+		footer.className = "center";
+		var oj = document.createElement("div");
+		oj.innerText = "[[${config.name}]] " + new Date().getFullYear();
+		var footerMessage = document.createElement("div");
+		footerMessage.innerHTML = "[(${footerMessage})]";
+		footer.appendChild(oj);
+		footer.appendChild(footerMessage);
+		$("body").append(footer);
+		
 	});
 	/*
 	 $(".hint pre").each(function(){
@@ -29,7 +46,6 @@ or
 	 $(this).prev().click(function(){
 	 content.toggle();
 	 });
-	
 	 });
 	 */
 	//console.log("To enable mathjax in hustoj, check line 15 in /home/judge/src/web/template/bs3/js.php");
@@ -37,6 +53,16 @@ or
 <script th:if="${config.csrfCheck}">
 	$(document).ready(function() {
 		//csrf
+		var list = document.getElementsByTagName("form");
+		if (list.length == 0) {
+			return;
+		}
+		for (var i = 0; i < list.length; i++) {
+			var csrf = document.createElement("input");
+			csrf.type = "hidden";
+			csrf.name = "csrf";
+			list[i].appendChild(csrf);
+		}
 		$.ajax({
 			"url" : "[(@{/api/csrf})]",
 			"dataType" : "json",
@@ -47,13 +73,6 @@ or
 				alert(xhr.responseJSON.message);
 			}
 		});
-		var list = document.getElementsByTagName("form");
-		for (var i = 0; i < list.length; i++) {
-			var csrf = document.createElement("input");
-			csrf.type = "hidden";
-			csrf.name = "csrf";
-			list[i].appendChild(csrf);
-		}
 	});
 </script>
 

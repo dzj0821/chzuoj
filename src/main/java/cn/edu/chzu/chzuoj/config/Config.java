@@ -25,6 +25,7 @@ public class Config {
 	private Boolean vcode;
 	private Boolean csrfCheck;
 	private Boolean registerNeedReview;
+	private Boolean oiMode;
 
 	public DatabaseConfig getDatabase() {
 		return database;
@@ -136,5 +137,13 @@ public class Config {
 	
 	public void setRegisterNeedReview(Boolean registerNeedReview) {
 		this.registerNeedReview = registerNeedReview;
+	}
+	
+	public Boolean getOiMode() {
+		return oiMode;
+	}
+	
+	public void setOiMode(Boolean oiMode) {
+		this.oiMode = oiMode;
 	}
 }

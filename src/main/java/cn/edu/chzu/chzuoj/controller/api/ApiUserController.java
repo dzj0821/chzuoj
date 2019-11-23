@@ -13,9 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.edu.chzu.chzuoj.annotation.NeedNotLogin;
-import cn.edu.chzu.chzuoj.annotation.OnSiteContestEnable;
+import cn.edu.chzu.chzuoj.annotation.ContestEnable;
 import cn.edu.chzu.chzuoj.config.Config;
 import cn.edu.chzu.chzuoj.controller.BaseController;
 import cn.edu.chzu.chzuoj.exception.ExecuteFailedException;
@@ -24,6 +25,7 @@ import cn.edu.chzu.chzuoj.service.UserService;
 import cn.edu.chzu.chzuoj.service.VcodeService;
 import cn.edu.chzu.chzuoj.util.RequestUtil;
 import cn.edu.chzu.chzuoj.util.SessionAttrNameUtil;
+import cn.edu.chzu.chzuoj.util.SessionUtil;
 
 /**
  * 
@@ -48,7 +50,7 @@ public class ApiUserController extends BaseController {
 	 * @return OK需要返回uid, shareCode, permission uid: 用户id shareCode: 此时是否能分享代码
 	 *         permission: 是否具有进入管理页面的权限
 	 */
-	@OnSiteContestEnable
+	@ContestEnable
 	@NeedNotLogin
 	@GetMapping("/profile")
 	public ResponseEntity<Map<String, Object>> profile() {
@@ -85,13 +87,11 @@ public class ApiUserController extends BaseController {
 	 * @return OK时返回json对象，包含属性back back:
 	 *         如果OJ是need-login状态返回false代表客户端跳转到主页，否则返回true代表客户端返回到上一页面
 	 */
-	@OnSiteContestEnable
+	@ContestEnable
 	@NeedNotLogin
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, Object>> login(String uid, String password, String vcode) {
-		if (uid == null || password == null || vcode == null) {
-			return json(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<Map<String, Object>> login(@RequestParam(required = true) String uid,
+			@RequestParam(required = true) String password, String vcode) {
 		HttpSession session = request.getSession();
 		// 验证码验证
 		String sessionVcode = (String) session.getAttribute(SessionAttrNameUtil.getVcode());
@@ -107,7 +107,7 @@ public class ApiUserController extends BaseController {
 			userService.login(uid, password, ip);
 		} catch (ExecuteFailedException e) {
 			// 登录失败的情况
-			return json(HttpStatus.FORBIDDEN, e.getMessage());
+			return json(HttpStatus.FORBIDDEN, e.getKey(), e.getArgs());
 		}
 		// 登录成功
 		session.setAttribute(SessionAttrNameUtil.getUserId(), uid);
@@ -127,23 +127,21 @@ public class ApiUserController extends BaseController {
 		return json(HttpStatus.OK, map);
 	}
 
-	@OnSiteContestEnable
+	@ContestEnable
 	@NeedNotLogin
 	@PostMapping("/register")
-	public ResponseEntity<Map<String, Object>> register(String uid, String name, String password, String clazz,
-			String email, String vcode) {
+	public ResponseEntity<Map<String, Object>> register(@RequestParam(required = true) String uid,
+			@RequestParam(required = true) String name, @RequestParam(required = true) String password,
+			@RequestParam(required = true) String clazz, @RequestParam(required = true) String email, String vcode) {
 		if (!config.getOpenRegister()) {
 			return json(HttpStatus.FORBIDDEN, "not-open-register");
-		}
-		if (uid == null || name == null || password == null || clazz == null || email == null || vcode == null) {
-			return json(HttpStatus.BAD_REQUEST);
 		}
 		HttpSession session = request.getSession();
 		// 验证码验证
 		String sessionVcode = (String) session.getAttribute(SessionAttrNameUtil.getVcode());
+		// 清空验证码防止重用
+		session.setAttribute(SessionAttrNameUtil.getVcode(), null);
 		if (!vcodeService.verify(sessionVcode, vcode)) {
-			// 清空验证码防止重用
-			session.setAttribute(SessionAttrNameUtil.getVcode(), null);
 			return json(HttpStatus.FORBIDDEN, "verify-code-wrong");
 		}
 		// 获取用户ip
@@ -151,10 +149,10 @@ public class ApiUserController extends BaseController {
 		try {
 			userService.register(uid, name, password, clazz, email, ip);
 		} catch (ExecuteFailedException e) {
-			return json(HttpStatus.FORBIDDEN, e.getMessage());
+			return json(HttpStatus.FORBIDDEN, e.getKey(), e.getArgs());
 		}
 		if (!config.getRegisterNeedReview()) {
-			//如果不需要审核
+			// 如果不需要审核
 			session.setAttribute(SessionAttrNameUtil.getUserId(), uid);
 			// 往session中添加权限
 			List<String> permissions = permissionService.getPermissionStrings(uid);
@@ -164,5 +162,33 @@ public class ApiUserController extends BaseController {
 			return json(HttpStatus.OK, "register-success");
 		}
 		return json(HttpStatus.OK, "register-success-but-need-review");
+	}
+
+	@ContestEnable
+	@PostMapping("/logout")
+	public ResponseEntity<Map<String, Object>> logout() {
+		HttpSession session = request.getSession();
+		if (session.getAttribute(SessionAttrNameUtil.getUserId()) == null) {
+			return json(HttpStatus.FORBIDDEN, "current-not-login");
+		}
+		SessionUtil.removeAllAttributes(request.getSession());
+		return json(HttpStatus.OK, "logout-success");
+	}
+
+	@PostMapping("/modify")
+	public ResponseEntity<Map<String, Object>> modify(@RequestParam(required = true) String oldPassword,
+			@RequestParam(required = true) String newPassword, @RequestParam(required = true) String name,
+			@RequestParam(required = true) String clazz, @RequestParam(required = true) String email) {
+		HttpSession session = request.getSession();
+		String uid = (String) session.getAttribute(SessionAttrNameUtil.getUserId());
+		if (uid == null) {
+			return json(HttpStatus.FORBIDDEN, "current-not-login");
+		}
+		try {
+			userService.modify(uid, oldPassword, newPassword, name, clazz, email);
+		} catch (ExecuteFailedException e) {
+			return json(HttpStatus.FORBIDDEN, e.getKey(), e.getArgs());
+		}
+		return json(HttpStatus.OK, "modify-success");
 	}
 }

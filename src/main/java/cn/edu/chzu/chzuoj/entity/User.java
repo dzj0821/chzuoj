@@ -9,24 +9,39 @@ import java.sql.Timestamp;
  *
  */
 public class User {
+	/**
+	 * 对应数据库字段user_id
+	 */
 	private String id;
 	private String email;
 	private Integer submit;
 	private Integer solved;
 	private Character defunct;
 	private String ip;
-	private Timestamp accessTime;
+	/**
+	 * 对应数据库字段accesstime
+	 */
+	private Timestamp lastLoginTime;
 	private Integer volume;
 	private Integer language;
 	private String password;
+	/**
+	 * 对应数据库字段reg_time
+	 */
 	private Timestamp registerTime;
+	/**
+	 * 对应数据库字段nick
+	 */
 	private String name;
+	/**
+	 * 对应数据库字段school
+	 */
 	private String clazz;
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", submit=" + submit + ", solved=" + solved + ", defunct="
-				+ defunct + ", ip=" + ip + ", accessTime=" + accessTime + ", volume=" + volume + ", language="
+				+ defunct + ", ip=" + ip + ", lastLoginTime=" + lastLoginTime + ", volume=" + volume + ", language="
 				+ language + ", password=" + password + ", registerTime=" + registerTime + ", name=" + name + ", clazz="
 				+ clazz + "]";
 	}
@@ -79,12 +94,12 @@ public class User {
 		this.ip = ip;
 	}
 
-	public Timestamp getAccessTime() {
-		return accessTime;
+	public Timestamp getLastLoginTime() {
+		return lastLoginTime;
 	}
 
-	public void setAccessTime(Timestamp accessTime) {
-		this.accessTime = accessTime;
+	public void setLastLoginTime(Timestamp lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
 	}
 
 	public Integer getVolume() {

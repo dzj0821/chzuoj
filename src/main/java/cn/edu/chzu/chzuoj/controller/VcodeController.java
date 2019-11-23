@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.edu.chzu.chzuoj.annotation.NeedNotLogin;
-import cn.edu.chzu.chzuoj.annotation.OnSiteContestEnable;
+import cn.edu.chzu.chzuoj.annotation.ContestEnable;
 import cn.edu.chzu.chzuoj.service.VcodeService;
 import cn.edu.chzu.chzuoj.util.SessionAttrNameUtil;
 
@@ -23,7 +23,7 @@ public class VcodeController extends BaseController {
 	@Autowired
 	private VcodeService vcodeService;
 	
-	@OnSiteContestEnable
+	@ContestEnable
 	@NeedNotLogin
 	@RequestMapping(value = "/vcode", produces = MediaType.IMAGE_JPEG_VALUE)
 	@ResponseBody

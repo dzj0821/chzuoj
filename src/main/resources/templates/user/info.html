@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+<title th:text="#{info}"></title>
+<link th:replace="include/css">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<!-- Main component for a primary marketing message or call to action -->
+		<div class="jumbotron">
+			<div style="margin: 0 auto; width: 100%; text-align: center;">
+				<table class="table table-striped" id="statics" style="width: 100%;">
+					<caption th:text="${uid} + '--' + ${name}"></caption>
+					<tr>
+						<td style="width: 15%;" th:text="#{rank}"></td>
+						<td style="width: 25%; text-align: center;" th:text="${rank}"></td>
+						<td style="width: 70%; text-align: center;"
+							th:text="#{solved-problems-list}"></td>
+					</tr>
+					<tr>
+						<td th:text="#{solved}">
+						<td style="text-align: center;">
+							<a th:href="@{/status(uid=${uid}, result=4)}" th:text="${solved}"></a>
+						<td rowspan="14" style="text-align: center;">
+							<div th:each="problem : ${problems}" style="display: inline;">
+								<a th:href="@{/problem(id=${problem.id})}"
+									th:text="${problem.id}"></a>
+								(
+								<a th:href="@{/status(uid=${uid}, pid=${problem.id})}"
+									th:text="${problem.count}"></a>
+								)
+							</div>
+							<!--
+<?php $sql="SELECT `problem_id`,count(1) from solution where `user_id`=? and result=4 group by `problem_id` ORDER BY `problem_id` ASC";
+if ($result=pdo_query($sql,$user)){ 
+    foreach($result as $row)
+    echo "p($row[0],$row[1]);";
+-->
+							<div id="submission" style="margin: 0 auto; width: 600px; height: 300px"></div>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{submit}"></td>
+						<td style="text-align: center;">
+							<a th:href="@{status(uid=${uid})}" th:text="${submit}"> </a>
+						</td>
+					</tr>
+					<tr class="need-statistics"
+						th:each="result : ${resultCounts}">
+						<td th:text="${result.name}"></td>
+						<td style="text-align: center;">
+							<a th:href="@{/status(uid=${uid}, result=${result.type})}"
+								th:text="${result.count}"></a>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{statistics}"></td>
+						<td>
+							<div id="pie"
+								style="position: relative; height: 105px; width: 120px;"></div>
+							<script type="text/javascript" th:src="@{/js/wz_jsgraphics.js}"></script>
+							<script type="text/javascript" th:src="@{/js/pie.js}"></script>
+							<script>
+								var y = new Array();
+								var x = new Array();
+								var trs = document
+										.getElementsByClassName("need-statistics");
+								var n;
+								for (var i = 0; i < trs.length; i++) {
+									//类型名
+									x.push(trs[i].cells[0].innerText);
+									//类型值
+									n = parseInt(trs[i].cells[1].firstElementChild.innerText);
+									y.push(n);
+								}
+								var mypie = new Pie("pie");
+								mypie.drawPie(y, x);
+							</script>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{clazz}">
+						<td style="text-align: center;" th:text="${clazz}"></td>
+					</tr>
+					<tr>
+						<td th:text="#{email}">
+						<td style="text-align: center;">***</td>
+					</tr>
+				</table>
+				<table style="margin: 0 auto; width: 40%;"
+					th:if="${loginLogs != null}" border="1">
+					<tr class="toprow">
+						<td th:text="#{user-id}"></td>
+						<td th:text="#{message}"></td>
+						<td th:text="#{last-login-ip}"></td>
+						<td th:text="#{last-login-time}"></td>
+					</tr>
+					<tbody>
+						<tr th:each="log : ${loginLogs}">
+							<td th:text="${log.userId}"></td>
+							<td th:text="${log.message}"></td>
+							<td th:text="${log.ip}"></td>
+							<td th:text="${#dates.format(log.time)}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- /container -->
+	<script th:replace="include/js"></script>
+	<script type="text/javascript" th:src="@{/js/jquery.flot.js}"></script>
+	<script type="text/javascript">
+		$(function() {
+			var d1 = [(${all})];
+			var d2 = [(${ac})];
+			var d3 = [ [ 0, 12 ], [ 7, 12 ], null, [ 7, 2.5 ], [ 12, 2.5 ] ];
+			$.plot($("#submission"), [ {
+				label : "[(#{submit})]",
+				data : d1,
+				lines : {
+					show : true
+				}
+			}, {
+				label : "[(#{ac})]",
+				data : d2,
+				bars : {
+					show : true
+				}
+			} ], {
+				xaxis : {
+					mode : "time",
+					timeformat: "%y/%m/%d"
+				//, max:(new Date()).getTime()
+				//,min:(new Date()).getTime()-100*24*3600*1000
+				},
+				grid : {
+					backgroundColor : {
+						colors : [ "#fff", "#333" ]
+					}
+				}
+			});
+		});
+	</script>
+</body>
+</html>

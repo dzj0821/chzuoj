@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+
+<title th:text="#{modify-info}"></title>
+<link th:replace="include/css">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<!-- Main component for a primary marketing message or call to action -->
+		<div class="jumbotron">
+
+			<form id="modify" role="form" class="form-horizontal"
+				onsubmit="return modify();">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{modify-info}"></label>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{user-id}"></label>
+					<div class="col-sm-4">
+						<label class="col-sm-2 control-label" th:text="${uid}"></label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{name}"></label>
+					<div class="col-sm-4">
+						<input name="name" class="form-control" th:value="${name}"
+							type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{password}"></label>
+					<div class="col-sm-4">
+						<input name="oldPassword" class="form-control"
+							th:placeholder="#{password} + '*'" type="password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{new-password}"></label>
+					<div class="col-sm-4">
+						<input name="newPassword" class="form-control" type="password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label"
+						th:text="#{new-repeat-password}"></label>
+					<div class="col-sm-4">
+						<input id="newRepeatPassword" class="form-control"
+							type="password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{clazz}"></label>
+					<div class="col-sm-4">
+						<input name="clazz" class="form-control" th:value="${clazz}"
+							type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" th:text="#{email}"></label>
+					<div class="col-sm-4">
+						<input name="email" class="form-control" th:value="${email}"
+							type="text">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-2">
+						<button name="submit" type="submit"
+							class="btn btn-default btn-block" th:text="#{modify}"></button>
+					</div>
+					<div class="col-sm-2">
+						<button name="submit" type="reset"
+							class="btn btn-default btn-block" th:text="#{reset}"></button>
+					</div>
+				</div>
+			</form>
+			<a th:href="@{/user/export/code/AC}"
+				th:text="#{download-all-ac-source}"></a>
+			<br>
+		</div>
+	</div>
+	<!-- /container -->
+	<script th:replace="include/js"></script>
+	<script>
+		function modify() {
+			if ($("#newRepeatPassword").val() != $("[name=newPassword]").val()) {
+				alert("[(#{password-not-same})]");
+				return false;
+			}
+			$.ajax({
+				url : "[(@{/api/user/modify})]",
+				type : "POST",
+				dataType : "json",
+				data : $("#modify").serialize(),
+				success : function(result) {
+					alert(result.message);
+					window.location.href = "[(@{${config.home}})]";
+				},
+				error : function(xhr, status, e) {
+					alert(xhr.responseJSON.message);
+					//清空密码框
+					$("input[name=password]").val("");
+					$("#newRepeatPassword").val("");
+					$("input[name=newPassword]").val("");
+				}
+			});
+			return false;
+		}
+	</script>
+</body>
+</html>

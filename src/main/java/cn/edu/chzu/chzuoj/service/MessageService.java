@@ -12,4 +12,9 @@ public interface MessageService {
 	 * @return 滚动公告
 	 */
 	public String getMarqueeMessage();
+	/**
+	 * 获取页尾内容
+	 * @return
+	 */
+	public String getFooterMessage();
 }

@@ -1,12 +1,12 @@
 package cn.edu.chzu.chzuoj.service.impl;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.edu.chzu.chzuoj.dao.SolutionDao;
-import cn.edu.chzu.chzuoj.entity.ChartData;
 import cn.edu.chzu.chzuoj.service.IndexService;
 
 /**
@@ -20,50 +20,27 @@ public class IndexServiceImpl implements IndexService {
 	private SolutionDao solutionDao;
 
 	@Override
-	public String[][] getAllChartData() {
-		//获得图表数据
-		List<ChartData> allChartDatas = solutionDao.selectAllChartData();
-		String[][] all = new String[allChartDatas.size()][2];
-		for (int i = 0; i < allChartDatas.size(); i++) {
-			all[i][0] = allChartDatas.get(i).getTimestamp();
-			all[i][1] = allChartDatas.get(i).getCount();
+	public Map<String, String> getSubmitSpeedAndUnit(String[][] allChartData, boolean administrator) {
+		Map<String, String> map = new HashMap<String, String>(2);
+		if (administrator) {
+			map.put("speedUnit", "min");
+		} else {
+			map.put("speedUnit", "day");
 		}
-		return all;
-	}
-
-	@Override
-	public String[][] getAcceptedChartData() {
-		// 获得图表数据
-		List<ChartData> acceptedChartDatas = solutionDao.selectAcceptedChartData();
-		String[][] ac = new String[acceptedChartDatas.size()][2];
-		for (int i = 0; i < acceptedChartDatas.size(); i++) {
-			ac[i][0] = acceptedChartDatas.get(i).getTimestamp();
-			ac[i][1] = acceptedChartDatas.get(i).getCount();
-		}
-		return ac;
-	}
-
-	@Override
-	public String getSubmitSpeed(String[][] allChartData, boolean administrator) {
 		if (administrator) {
 			Integer speedPerMin = solutionDao.selectSubmitSpeedPerMin();
 			if (speedPerMin == null) {
-				return "0";
+				map.put("speed", "0");
+			} else {
+				map.put("speed", speedPerMin.toString());
 			}
-			return speedPerMin.toString();
+			return map;
 		}
 		if (allChartData.length > 0 && allChartData[0][1] != null) {
-			return allChartData[0][1];
+			map.put("speed", allChartData[0][1]);
+		} else {
+			map.put("speed", "0");
 		}
-		return "0";
+		return map;
 	}
-
-	@Override
-	public String getSubmitSpeedUnit(boolean administrator) {
-		if (administrator) {
-			return "min";
-		}
-		return "day";
-	}
-
 }

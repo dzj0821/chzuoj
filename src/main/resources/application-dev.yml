@@ -42,9 +42,11 @@ chzuoj:
     #是否开启验证码
     vcode: true
     #是否开启csrf校验，可防止csrf攻击
-    csrf-check: true
+    csrf-check: false
     #注册是否需要管理员审核
     register-need-review: true
+    #是否开启OI比赛模式
+    oi-mode: false
 server:
     port: 8080
     servlet:
@@ -66,10 +68,14 @@ spring:
         max-wait: 10000
     thymeleaf:
         #模板的模式，支持 HTML, XML TEXT JAVASCRIPT
-        mode: HTML5
+        mode: HTML
         #编码 可不用配置
         encoding: UTF-8
         #内容类别,可不用配置
         content-type: text/html
         #开发配置为false,避免修改模板还要重启服务器
         cache: false
+mybatis:
+    configuration:
+        #数据库中下划线命名法自动转换为实体类的大驼峰命名法
+        map-underscore-to-camel-case: true
