@@ -10,15 +10,15 @@
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li th:if="${config.onSiteContestId == null}"
-					th:class="${currentUrl == 'faq'} ? active">
-					<a th:href="@{/faq}">
+					th:class="${currentUrl == '/faqs'} ? active">
+					<a th:href="@{/faqs}">
 						<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-						[(#{faq})]
+						[(#{faqs})]
 					</a>
 				</li>
 
 				<li th:if="${config.onSiteContestId == null}"
-					th:class="${currentUrl == 'problem/list'} ? active">
+					th:class="${currentUrl == '/problem/list'} ? active">
 					<a th:href="@{/problem/list}">
 						<span class="glyphicon glyphicon-book" aria-hidden="true"></span>
 						[(#{problem})]
@@ -26,27 +26,27 @@
 				</li>
 
 				<li th:if="${config.onSiteContestId == null}"
-					th:class="${currentUrl == 'category'} ? active">
+					th:class="${currentUrl == '/category'} ? active">
 					<a th:href="@{/category}">
 						<span class="glyphicon glyphicon-th" aria-hidden="true"></span>
 						[(#{category})]
 					</a>
 				</li>
 				<li th:if="${config.onSiteContestId == null}"
-					th:class="${currentUrl == 'status'} ? active">
+					th:class="${currentUrl == '/status'} ? active">
 					<a th:href="@{/status}">
 						<span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
 						[(#{status})]
 					</a>
 				</li>
 				<li th:if="${config.onSiteContestId == null}"
-					th:class="${currentUrl == 'ranklist'} ? active">
+					th:class="${currentUrl == '/ranklist'} ? active">
 					<a th:href="@{/ranklist}">
 						<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
 						[(#{ranklist})]
 					</a>
 				</li>
-				<li th:class="${currentUrl == 'contest'} ? active">
+				<li th:class="${currentUrl == '/contest'} ? active">
 					<a
 						th:href="${config.onSiteContestId == null} ? @{/contest} : @{'/contest?cid=' + ${config.onSiteContestId}}">
 						<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
@@ -77,14 +77,14 @@
 					<a>]</a>
 				</li>
 				<li th:if="${config.onSiteContestId == null}"
-					th:class="${currentUrl == 'class/list'} ? active">
+					th:class="${currentUrl == '/class/list'} ? active">
 					<a th:href="@{/class/list}">
 						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
 						[(#{class-list})]
 					</a>
 				</li>
 				<li th:if="${config.onSiteContestId == null}"
-					th:class="${currentUrl == 'statistics'} ? active">
+					th:class="${currentUrl == '/statistics'} ? active">
 					<a th:href="@{/statistics}">
 						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
 						[(#{statistics})]

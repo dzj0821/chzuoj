@@ -47,6 +47,12 @@ chzuoj:
     register-need-review: true
     #是否开启OI比赛模式
     oi-mode: false
+    #问题列表中每页的题目个数
+    problem-count-per-page: 20
+    #问题列表与竞赛列表中最大可选择的页数（比如当前在第10页，此值为8，可以选择到2-18页）
+    max-choose-page-count: 8
+    #竞赛列表中每页的竞赛个数
+    contest-count-per-page: 10
 server:
     port: 8080
     servlet:

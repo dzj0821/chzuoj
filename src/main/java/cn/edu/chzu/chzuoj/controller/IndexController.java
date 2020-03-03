@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.edu.chzu.chzuoj.entity.New;
@@ -29,7 +29,7 @@ public class IndexController extends BaseController {
 	@Autowired
 	private SolutionService solutionService;
 	
-	@RequestMapping("/")
+	@GetMapping("/")
 	public ModelAndView index() {
 		//主页显示的新闻
 		List<New> news = newService.getNews();

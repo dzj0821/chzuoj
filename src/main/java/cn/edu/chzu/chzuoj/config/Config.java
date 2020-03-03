@@ -26,6 +26,9 @@ public class Config {
 	private Boolean csrfCheck;
 	private Boolean registerNeedReview;
 	private Boolean oiMode;
+	private int problemCountPerPage;
+	private int maxChoosePageCount;
+	private int contestCountPerPage;
 
 	public DatabaseConfig getDatabase() {
 		return database;
@@ -145,5 +148,29 @@ public class Config {
 	
 	public void setOiMode(Boolean oiMode) {
 		this.oiMode = oiMode;
+	}
+	
+	public int getProblemCountPerPage() {
+		return problemCountPerPage;
+	}
+	
+	public void setProblemCountPerPage(int problemCountPerPage) {
+		this.problemCountPerPage = problemCountPerPage;
+	}
+	
+	public int getMaxChoosePageCount() {
+		return maxChoosePageCount;
+	}
+	
+	public void setMaxChoosePageCount(int maxChoosePageCount) {
+		this.maxChoosePageCount = maxChoosePageCount;
+	}
+	
+	public int getContestCountPerPage() {
+		return contestCountPerPage;
+	}
+	
+	public void setContestCountPerPage(int contestCountPerPage) {
+		this.contestCountPerPage = contestCountPerPage;
 	}
 }
