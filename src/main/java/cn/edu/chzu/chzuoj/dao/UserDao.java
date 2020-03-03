@@ -25,6 +25,7 @@ public interface UserDao {
 	@Results(id = "userMap", value = {
 			@Result(column = "user_id", property = "id", id = true),
 			@Result(column = "accesstime", property = "lastLoginTime"),
+			@Result(column = "volume", property = "problemListRememberPage"),
 			@Result(column = "reg_time", property = "registerTime"),
 			@Result(column = "nick", property = "name"),
 			@Result(column = "school", property = "clazz")
@@ -60,6 +61,14 @@ public interface UserDao {
 			+ "`school` = #{clazz}, `email` = #{email} WHERE `user_id` = #{id}")
 	public void updateUserById(@Param("id") String id, @Param("password") String password, @Param("name") String name,
 			@Param("clazz") String clazz, @Param("email") String email);
+	
+	/**
+	 * 更新对应用户id的记住页码的页数
+	 * @param id
+	 * @param page 要记住的页码
+	 */
+	@Update("UPDATE `users` SET `volume` = #{page} WHERE `user_id` = #{id}")
+	public void updateUserProblemListRememberPageById(@Param("id") String id, @Param("page") int page);
 	
 	/**
 	 * 更新用户提交数

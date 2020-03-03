@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+<title th:if="${normal != null}"
+	th:text="#{problem}+${problem.id+'--'+problem.title}"></title>
+<title th:if="${contest != null}"
+	th:text="#{problem}+${number+': '+problem.title}"></title>
+<link th:replace="include/css">
+</head>
+
+<body>
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<div class="jumbotron"></div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div style="margin: 0 auto; text-align: center; width: 100%;">
+					<h3 th:if="${normal != null}"
+						th:text="${problem.id+': '+problem.title}"></h3>
+					<h3 th:if="${contesr != null}"
+						th:text="#{problem}+${number+': '+problem.title}"></h3>
+					<span class="green" th:text="#{time-limit}+': '"></span>
+					<span th:text="${problem.timeLimit}+#{second}"></span>
+					<span>&nbsp;&nbsp;</span>
+					<span class="green" th:text="#{memory-limit}+': '"></span>
+					<span th:text="${problem.memoryLimit}+#{mbyte}"></span>
+					<span
+						th:if="${problem.spj != null && #strings.toString(problem.spj) == '1'}">&nbsp;&nbsp;</span>
+					<span
+						th:if="${problem.spj != null && #strings.toString(problem.spj) == '1'}"
+						style="color: red;" th:text="#{use-special-judge}"></span>
+					<br />
+					<span th:text="#{submit}+': '"></span>
+					<span th:text="${problem.submit}"></span>
+					<span>&nbsp;&nbsp;</span>
+					<span th:text="#{solved}+': '"></span>
+					<span th:text="${problem.accepted}"></span>
+					<br />
+					<span>[</span>
+					<a th:if="${normal != null}"
+						th:href="@{/problem/submit(id=${problem.id})}" th:text="#{submit}"></a>
+					<a th:if="${contest != null}"
+						th:href="@{/problem/submit(cid=${contest.id},num=${num},langmask=${contest.langmask})}"
+						th:text="#{submit}"></a>
+					<span>]</span>
+					<span>[</span>
+					<a th:href="@{/status(id=${problem.id})}" th:text="#{status}"></a>
+					<span>]</span>
+					<span>[</span>
+					<span th:text="#{creator}+': '"></span>
+					<span th:if="${problem.userId == null}" th:text="#{imported}"></span>
+					<a th:if="${problem.userId != null}" th:href="@{/user/info(uid=${problem.userId})}" th:text="${problem.userId}"></a>
+					<span>]</span>
+					<span th:if="${special}">[</span>
+					<a th:if="${special}" th:href="@{/admin/problem/edit(id=${problem.id})}"
+						th:text="#{edit}"></a>
+					<span th:if="${special}">]</span>
+					<span th:if="${special}">[</span>
+					<a th:if="${special}" th:href="'javascript:phpfm('+${problem.id}+')'"
+						th:text="#{test-data}"></a>
+					<span th:if="${special}">]</span>
+				</div>
+			</div>
+			<!--StartMarkForVirtualJudge-->
+			<div class="panel panel-body">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 th:text="#{description}"></h4>
+					</div>
+					<div class="panel-body content" th:utext="${problem.description}"></div>
+				</div>
+				<div th:if="${problem.input != null && problem.input != ''}"
+					class='panel panel-default'>
+					<div class="panel-heading">
+						<h4 th:text="#{input}"></h4>
+					</div>
+					<div class="panel-body content" th:utext="${problem.input}"></div>
+				</div>
+				<div th:if="${problem.output != null && problem.output != ''}"
+					class='panel panel-default'>
+					<div class="panel-heading">
+						<h4 th:text="#{output}"></h4>
+					</div>
+					<div class="panel-body content" th:utext="${problem.output}"></div>
+				</div>
+				<div
+					th:if="${problem.sampleInput != null && problem.sampleInput != ''}"
+					class="panel panel-default">
+					<div class="panel-heading">
+						<h4 style="display: inline-block;" th:text="#{sample-input}"></h4>
+						<a href="javascript:CopyToClipboard($('#sampleinput').text())"
+							th:text="#{copy}"></a>
+					</div>
+					<div class="panel-body">
+						<pre class="content"><span id="sampleinput"
+								class="sampledata" th:text="${problem.sampleInput}"></span></pre>
+					</div>
+				</div>
+				<div
+					th:if="${problem.sampleOutput != null && problem.sampleOutput != ''}"
+					class="panel panel-default">
+					<div class="panel-heading">
+						<h4 style="display: inline-block;" th:text="#{sample-output}"></h4>
+						<a href="javascript:CopyToClipboard($('#sampleoutput').text())"
+							th:text="#{copy}"></a>
+					</div>
+					<div class="panel-body">
+						<pre class="content"><span id="sampleoutput"
+								class="sampledata" th:text="${problem.sampleOutput}"></span></pre>
+					</div>
+				</div>
+				<div th:if="${problem.hint != null && problem.hint != ''}"
+					class='panel panel-default'>
+					<div class="panel-heading">
+						<h4 th:text="#{hint}"></h4>
+					</div>
+					<div class="panel-body content" th:utext="${problem.hint}"></div>
+				</div>
+				<div
+					th:if="${normal != null && sources != null && sources.length != 0}"
+					class='panel panel-default'>
+					<div class="panel-heading">
+						<h4 th:text="#{source}"></h4>
+					</div>
+					<div class="panel-body content">
+						<div style="display: inline-block;" th:each="source : ${sources}">
+							<a th:href="@{/problem/list(search=${source})}"
+								th:text="${source}"></a>
+							<span>&nbsp;</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--EndMarkForVirtualJudge-->
+			<div class="panel-footer"
+				style="margin: 0 auto; text-align: center; width: 100%;">
+				<span>[</span>
+				<a th:if="${normal != null}"
+					th:href="@{/problem/submit(id=${problem.id})}" th:text="#{submit}"></a>
+				<a th:if="${contest != null}"
+					th:href="@{/problem/submit(cid=${contest.id},num=${num},langmask=${contest.langmask})}"
+					th:text="#{submit}"></a>
+				<span>]</span>
+				<span>[</span>
+				<a th:href="@{/status(id=${problem.id})}" th:text="#{status}"></a>
+				<span>]</span>
+				<span th:if="${special}">[</span>
+				<a th:if="${special}" th:href="@{/admin/problem/edit(id=${problem.id})}"
+					th:text="#{edit}"></a>
+				<span th:if="${special}">]</span>
+				<span th:if="${special}">[</span>
+				<a th:if="${special}" th:href="'javascript:phpfm('+${problem.id}+')'"
+					th:text="#{test-data}"></a>
+				<span th:if="${special}">]</span>
+			</div>
+		</div>
+	</div>
+	<!-- /container -->
+<script th:replace="include/js"></script>
+	<script>
+		function phpfm(pid) {
+			$.post("[[@{/admin/phpfm}]]", {
+				'frame' : 3,
+				'pid' : pid,
+				'pass' : ''
+			}, function(data, status) {
+				if (status == "success") {
+					document.location.href = "[[@{/admin/phpfm(frame=3)}]]&pid=" + pid;
+				}
+			});
+		}
+		function CopyToClipboard(input) {
+			var textToClipboard = input;
+
+			var success = true;
+			if (window.clipboardData) { // Internet Explorer
+				window.clipboardData.setData("Text", textToClipboard);
+			} else {
+				// create a temporary element for the execCommand method
+				var forExecElement = CreateElementForExecCommand(textToClipboard);
+				/* Select the contents of the element 
+				(the execCommand for 'copy' method works on the selection) */
+				SelectContent(forExecElement);
+				var supported = true;
+				// UniversalXPConnect privilege is required for clipboard access in Firefox
+				try {
+					if (window.netscape && netscape.security) {
+						netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+					}
+					// Copy the selected content to the clipboard
+					// Works in Firefox and in Safari before version 5
+					success = document.execCommand("copy", false, null);
+				} catch (e) {
+					success = false;
+				}
+				// remove the temporary element
+				document.body.removeChild(forExecElement);
+			}
+			if (success) {
+				alert("[[#{copy-success}]]");
+			} else {
+				alert("[[#{copy-failed}]]");
+			}
+		}
+		function CreateElementForExecCommand(textToClipboard) {
+			var forExecElement = document.createElement("pre");
+			// place outside the visible area
+			forExecElement.style.position = "absolute";
+			forExecElement.style.left = "-10000px";
+			forExecElement.style.top = "-10000px";
+			// write the necessary text into the element and append to the document
+			forExecElement.textContent = textToClipboard;
+			document.body.appendChild(forExecElement);
+			// the contentEditable mode is necessary for the  execCommand method in Firefox
+			forExecElement.contentEditable = true;
+			return forExecElement;
+		}
+		function SelectContent(element) {
+			// first create a range
+			var rangeToSelect = document.createRange();
+			rangeToSelect.selectNodeContents(element);
+			// select the contents
+			var selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(rangeToSelect);
+		}
+	</script>
+</body>
+</html>

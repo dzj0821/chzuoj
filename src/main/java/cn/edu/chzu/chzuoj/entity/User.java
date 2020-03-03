@@ -16,13 +16,19 @@ public class User {
 	private String email;
 	private Integer submit;
 	private Integer solved;
+	/**
+	 * 账户是否被禁用
+	 */
 	private Character defunct;
 	private String ip;
 	/**
 	 * 对应数据库字段accesstime
 	 */
 	private Timestamp lastLoginTime;
-	private Integer volume;
+	/**
+	 * 对应数据库字段volume
+	 */
+	private Integer problemListRememberPage;
 	private Integer language;
 	private String password;
 	/**
@@ -41,7 +47,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", submit=" + submit + ", solved=" + solved + ", defunct="
-				+ defunct + ", ip=" + ip + ", lastLoginTime=" + lastLoginTime + ", volume=" + volume + ", language="
+				+ defunct + ", ip=" + ip + ", lastLoginTime=" + lastLoginTime + ", problemListRememberPage=" + problemListRememberPage + ", language="
 				+ language + ", password=" + password + ", registerTime=" + registerTime + ", name=" + name + ", clazz="
 				+ clazz + "]";
 	}
@@ -102,12 +108,12 @@ public class User {
 		this.lastLoginTime = lastLoginTime;
 	}
 
-	public Integer getVolume() {
-		return volume;
+	public Integer getProblemListRememberPage() {
+		return problemListRememberPage;
 	}
-
-	public void setVolume(Integer volume) {
-		this.volume = volume;
+	
+	public void setProblemListRememberPage(Integer problemListRememberPage) {
+		this.problemListRememberPage = problemListRememberPage;
 	}
 
 	public Integer getLanguage() {

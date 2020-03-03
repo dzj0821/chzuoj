@@ -23,11 +23,11 @@ public interface SolutionDao {
 	 * @param accepted 如果为false则选取所有提交数据，否则仅选取正确提交数据
 	 * @return map参数timestamp为提交时间，参数count为提交数
 	 */
-	@SelectProvider(type = UserDaoProvider.class, method = "selectSubmitCountsAndTimestamps")
+	@SelectProvider(type = SolutionDaoProvider.class, method = "selectSubmitCountsAndTimestamps")
 	public List<Map<String, Object>> selectSubmitCountsAndTimestamps(String uid, boolean accepted);
 	
 	/**
-	 * 获得每分钟的平均提交数
+	 * 获得每分钟的平均提交数（result值从4开始代表已经评判的结果）
 	 * @return
 	 */
 	@Select("SELECT AVG(speed) FROM (SELECT AVG(1) AS speed, judgetime FROM solution WHERE result > 3 AND judgetime > DATE_SUB(NOW(), INTERVAL 1 HOUR) GROUP BY (judgetime DIV 60 * 60) ORDER BY speed) AS `table`")
@@ -42,7 +42,7 @@ public interface SolutionDao {
 	public void updateNameByUserId(@Param("uid") String uid, @Param("uid") String name);
 	
 	/**
-	 * 获取用户的总通过题目数
+	 * 获取用户的总通过题目数（result值为4代表提交正确）
 	 * @param uid 用户id
 	 * @return
 	 */
@@ -58,7 +58,7 @@ public interface SolutionDao {
 	public int selectSubmitsCountByUserId(@Param("uid") String uid);
 	
 	/**
-	 * 获取用户各类提交结果的数量
+	 * 获取用户各类提交结果的数量（result值从4开始代表已经评判的结果）
 	 * @param uid
 	 * @return 每行一个map，map中type对应JudgeResult的value，count代表对应类型的提交数
 	 */
@@ -67,7 +67,7 @@ public interface SolutionDao {
 	public List<Map<String, Integer>> selectSubmitResultCountsByUserId(@Param("uid") String uid);
 	
 	/**
-	 * 获取用户解答正确的题目编号和正确次数
+	 * 获取用户解答正确的题目编号和正确次数（result值为4代表提交正确）
 	 * @param uid
 	 * @return 每行一个map，map中id为解答正确的题目编号，count为该题的正确提交次数
 	 */
@@ -75,7 +75,23 @@ public interface SolutionDao {
 			+ "WHERE `user_id` = #{uid} AND result = 4 GROUP BY `problem_id` ORDER BY `problem_id` ASC")
 	public List<Map<String, Integer>> selectProblemAcceptedCountsByUserId(@Param("uid") String uid);
 	
-	class UserDaoProvider {
+	/**
+	 * 获取用户所有提交过的题目编号
+	 * @param uid
+	 * @return
+	 */
+	@Select("SELECT DISTINCT problem_id FROM solution WHERE user_id = #{uid}")
+	public List<Integer> selectSubmitProblemIdsByUserId(@Param("uid") String uid);
+	
+	/**
+	 * 获取用户所有提交正确的题目编号（result值为4代表提交正确）
+	 * @param uid
+	 * @return
+	 */
+	@Select("SELECT DISTINCT problem_id FROM solution WHERE user_id = #{uid} AND result = 4")
+	public List<Integer> selectSolvedProblemIdsByUserId(@Param("uid") String uid);
+	
+	class SolutionDaoProvider {
 		public String selectSubmitCountsAndTimestamps(String uid, boolean accepted) {
 			return new SQL() {{
 				SELECT("UNIX_TIMESTAMP(DATE(in_date)) * 1000 AS `timestamp`", "COUNT(1) AS `count`");

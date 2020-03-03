@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+<link rel="stylesheet" th:href="@{/css/an-skill-bar.css}">
+<title th:text="#{problem-list}"></title>
+<link th:replace="include/css">
+</head>
+<body>
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<div class="jumbotron">
+			<div style="margin: 0 auto; width: 100%;">
+				<nav id="page" class="center">
+					<ul class="pagination">
+						<li class="page-item">
+							<a th:if="${search} != null"
+								th:href="@{/problem/list(search=${search}, page=1)}">&lt;&lt;</a>
+							<a th:if="${search} == null" th:href="@{/problem/list(page=1)}">&lt;&lt;</a>
+						</li>
+						<li th:if="${startPage <= endPage}" th:each="i : ${#numbers.sequence(startPage, endPage)}"
+							th:class="${page == i} ? 'active page-item' : 'page-item'">
+							<a th:if="${search} != null"
+								th:href="@{/problem/list(search=${search}, page=${i})}"
+								th:text="${i}"></a>
+							<a th:if="${search} == null"
+								th:href="@{/problem/list(page=${i})}" th:text="${i}"></a>
+						</li>
+						<li class="page-item">
+							<a th:if="${search} != null"
+								th:href="@{/problem/list(search=${search}, page=${pageCount})}">&gt;&gt;</a>
+							<a th:if="${search} == null"
+								th:href="@{/problem/list(page=${pageCount})}">&gt;&gt;</a>
+						</li>
+					</ul>
+				</nav>
+				<table style="margin: 0 auto; text-align: center;">
+					<tr align="center" class="evenrow">
+						<td width="5"></td>
+						<td colspan="1">
+							<form class="form-inline" th:action="@{/problem/info}">
+								<input class="form-control search-query" type="text" name="id"
+									th:placeholder="#{problem-id}" />
+								<button class="form-control" type="submit" th:text="#{go}"></button>
+							</form>
+						</td>
+						<td colspan="1">
+							<form class="form-search form-inline">
+								<input type="text" name="search"
+									class="form-control search-query"
+									th:placeholder="#{keywords-title-or-source}" th:value="${search}"/>
+								<button type="submit" class="form-control" th:text="#{search}"></button>
+							</form>
+						</td>
+					</tr>
+				</table>
+				<table id="problemset" style="margin: 0 auto; width: 100%; text-align: center;"
+					class="table table-striped">
+					<thead>
+						<tr class="toprow">
+							<th width="5"></th>
+							<th style="margin: 0 auto; text-align: center;" width="20" class="hidden-xs" th:text="#{problem-id}"></th>
+							<th style="margin: 0 auto; text-align: center;" th:text="#{title}"></th>
+							<th style="margin: 0 auto; text-align: center;" class='hidden-xs' width="10%" th:text="#{source}"></th>
+							<th style="margin: 0 auto; text-align: center; cursor: hand" width="60" th:text="#{ac}"></th>
+							<th style="margin: 0 auto; text-align: center; cursor: hand" width="60" th:text="#{submit}"></th>
+							<th style="margin: 0 auto; text-align: center; cursor: hand" width="116" th:text="#{accept-rate}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="problem,iterStat : ${problems}"
+							th:class="${iterStat.index % 2 == 0} ? 'oddrow' : 'evenrow'">
+							<td>
+								<div th:if="${problemAccepts[iterStat.index] == true}"
+									class='label label-success'>Y</div>
+								<div th:if="${problemAccepts[iterStat.index] == false}"
+									class='label label-danger'>N</div>
+							</td>
+							<td class="hidden-xs">
+								<div class="center" th:text="${problem.id}"></div>
+							</td>
+							<td>
+								<div class="left">
+									<a th:href="@{/problem/info(id=${problem.id})}"
+										th:text="${problem.title}"></a>
+								</div>
+							</td>
+							<td class="hidden-xs">
+								<div class="center">
+									<a th:each="sources : ${problemSources[iterStat.index]}"
+										th:class="'label label-'+${sources.theme}"
+										style="display: inline-block;"
+										th:href="@{/problem/list(search=${sources.name})}"
+										th:text="${sources.name}"></a>
+								</div>
+							</td>
+							<td>
+								<div class="center">
+									<a th:href="@{/status(pid=${problem.id}, result=4)}"
+										th:text="${problem.accepted}"></a>
+								</div>
+							</td>
+							<td>
+								<div class="center">
+									<a th:href="@{/status(pid=${problem.id})}"
+										th:text="${problem.submit}"></a>
+								</div>
+							</td>
+							<td>
+								<div class="skillbar html" style="text-align: center"
+									th:with="radio=${problem.submit==0?0:100*problem.accepted/problem.submit}">
+									<div class="filled" th:data-width="${radio}"
+										th:style="'width: '+${radio}+'%'"></div>
+									<span class="percent" th:text="${radio}+'%'"></span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- /container -->
+	<script th:replace="include/js"></script>
+	<script th:src="@{/js/an-skill-bar.js}"></script>
+	<script th:src="@{/js/main.js}"></script>
+	<script th:src="@{/js/jquery.tablesorter.js}"></script>
+	<script>
+		$(document).ready(function() {
+			$("#problemset").tablesorter();
+			$("#problemset").after($("#page").prop("outerHTML"));
+		});
+	</script>
+</body>
+</html>

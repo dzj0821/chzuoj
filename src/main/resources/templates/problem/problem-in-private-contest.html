@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" th:href="@{/image/favicon.ico}">
+<title th:text="#{problem-in-private-contest}"></title>
+<link th:replace="include/css">
+</head>
+<body>
+	<div class="container">
+		<div th:replace="include/nav"></div>
+		<div class="jumbotron">
+			<h3 th:text="#{problem-in-private-contest-detail}"></h3>
+			<div th:each="contest : ${contests}">
+				<a th:href="@{/problem/info(cid=${contest.id}, num=${contest.num})}" th:text="${contest.title}"></a>
+				<br />
+			</div>
+		</div>
+	</div>
+	<script th:replace="include/js"></script>
+</body>
+</html>
